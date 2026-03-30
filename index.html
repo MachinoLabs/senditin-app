@@ -1,54 +1,36 @@
 <script>
-    const form = document.getElementById('submissionForm');
-    const submitBtn = document.querySelector('.submit-btn');
-    
-    // THE NEW CORRECTED URL (V7)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxhwl358mMfCq2TSFF6nJb0x1xBX4XZZTDJz-X4rQXXoFsUWb0w_iFgy9RZhRdZu6E6sA/exec'; 
+  // 1. YOUR NEW V8 URL
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbye0BAdQbvozSKtiasGpzge7vIF_2QNR0-gZhJs4ekXFwyYFytakZ3ChaBzLUNo4ofqFw/exec';
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const originalBtnText = submitBtn.innerText;
-      submitBtn.innerText = 'SENDING...';
-      submitBtn.style.backgroundColor = '#f39c12';
-      submitBtn.disabled = true;
+  document.getElementById('submissionForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const submitBtn = e.target.querySelector('.submit-btn');
+    submitBtn.innerText = 'SENDING...';
+    submitBtn.disabled = true;
 
-      // CONVERT FORM TO JSON (This is the fix for the routing failure)
-      const formData = new FormData(form);
-      const data = {
-        companyPin: formData.get('company_pin'),
-        crewId: formData.get('crew_id'),
-        workOrder: formData.get('work_order'),
-        workPerformed: formData.get('work_performed'),
-        jobComplete: formData.get('job_complete'),
-        notes: formData.get('notes')
-      };
+    // 2. THE "JSON" PACKAGING (This stops the scrambling/bleeding)
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
 
-      fetch(scriptURL, { 
-        method: 'POST', 
-        mode: 'no-cors',
-        body: JSON.stringify(data) // Sends it in the format the script expects
-      })
-      .then(() => {
-          submitBtn.innerText = 'SENT! 👍';
-          submitBtn.style.backgroundColor = '#198754';
-          form.reset();
-          setTimeout(() => {
-            submitBtn.innerText = originalBtnText;
-            submitBtn.style.backgroundColor = ''; 
-            submitBtn.disabled = false;
-          }, 3000);
-      })
-      .catch(error => {
-          console.error('Error!', error.message);
-          submitBtn.innerText = 'ERROR - TRY AGAIN';
-          submitBtn.style.backgroundColor = '#dc3545';
-          submitBtn.disabled = false;
-      });
+    fetch(scriptURL, {
+      method: 'POST',
+      mode: 'no-cors', // Keeps things smooth with Google
+      body: JSON.stringify(data) // Sends clean, labeled envelopes
+    })
+    .then(() => {
+      submitBtn.innerText = 'SENT! 👍';
+      submitBtn.style.backgroundColor = '#198754';
+      e.target.reset();
+      setTimeout(() => {
+        submitBtn.innerText = 'SEND IT IN';
+        submitBtn.style.backgroundColor = ''; 
+        submitBtn.disabled = false;
+      }, 3000);
+    })
+    .catch(error => {
+      console.error('Error!', error.message);
+      submitBtn.innerText = 'RETRY';
+      submitBtn.disabled = false;
     });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-      });
-    }
+  });
 </script>
