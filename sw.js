@@ -1,4 +1,4 @@
-const CACHE_NAME = 'send-it-in-v2';
+const CACHE_NAME = 'send-it-in-v3';
 const urlsToCache = [
   './',
   './index.html',
@@ -20,12 +20,12 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// 3. THE DATA TRANSMISSION (The Brain)
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyk1qD07ZF5MtXTBa1rHLMJZYMUxJyymA3KiFBHTBZHBqLQ1_MmeS3LP5jdpS9Vqg6WyA/exec';
+// 3. THE MASTER DATA TRANSMISSION (Connected to your Master Control Sheet)
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwunvuYfuaBW576bic1EwHSXtaIs-H4qK8-HkMIoNMHAzdfbZvwUKRlO1gdyMz5ACoPsQ/exec';
 
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SUBMIT_FORM') {
-    // This sends the data from your phone to Google Sheets
+    // This sends the data from your phone to your Master Script
     fetch(scriptURL, {
       method: 'POST',
       mode: 'no-cors', 
