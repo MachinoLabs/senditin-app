@@ -1,4 +1,4 @@
-const CACHE_NAME = 'send-it-in-v3';
+const CACHE_NAME = 'send-it-in-v4';
 const urlsToCache = [
   './',
   './index.html',
@@ -21,7 +21,7 @@ self.addEventListener('fetch', event => {
 });
 
 // 3. THE MASTER DATA TRANSMISSION (Connected to your Master Control Sheet)
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwunvuYfuaBW576bic1EwHSXtaIs-H4qK8-HkMIoNMHAzdfbZvwUKRlO1gdyMz5ACoPsQ/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzxcN_zRrkYF8HnAEOIV9PYa9XBzP8jSGvoNU54iuWnAHGXJqOk8Kkqf_1pA1CAHreP2A/exec';
 
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SUBMIT_FORM') {
