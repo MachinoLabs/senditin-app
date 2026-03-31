@@ -1,4 +1,4 @@
-const CACHE_NAME = 'send-it-in-v8';
+const CACHE_NAME = 'send-it-in-v9';
 const urlsToCache = [
   './',
   './index.html',
