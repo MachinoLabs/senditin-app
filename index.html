@@ -8,9 +8,10 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* YOUR EXACT ORIGINAL CSS - UNTOUCHED */
+    /* Reset & Base Styles */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
+    /* Midnight Navy Theme */
     body { 
       background-color: #0f172a; 
       color: #ffffff; 
@@ -21,6 +22,7 @@
     }
     .container { width: 100%; max-width: 480px; }
     
+    /* Header & Logo Badge */
     .header { 
       display: flex; 
       justify-content: space-between; 
@@ -28,7 +30,6 @@
       border-bottom: 1px solid #1e293b; 
       padding-bottom: 15px; 
       margin-bottom: 25px; 
-      transition: border-color 0.3s ease; 
     }
     
     .logo-badge { 
@@ -38,19 +39,16 @@
       display: inline-flex; 
       align-items: center;
       border: 1px solid #1e293b;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; color: #ffffff; }
     .logo-blue { color: #0d6efd; }
     
-    /* TAGLINE STYLING */
-    .tagline { font-size: 11px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
-    .tagline-blue { color: #0d6efd; }
-
-    .theme-toggle { font-size: 22px; cursor: pointer; user-select: none; padding: 5px; filter: drop-shadow(0 0 8px rgba(243, 156, 18, 0.2)); }
+    .theme-toggle { font-size: 22px; cursor: pointer; user-select: none; padding: 5px; }
     
+    /* Form Elements */
     .form-group { margin-bottom: 20px; }
-    label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s ease; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
     
     input[type="text"], textarea { 
       width: 100%; 
@@ -62,10 +60,10 @@
       font-size: 16px; 
       transition: all 0.3s ease; 
     }
-    input::placeholder, textarea::placeholder { color: #64748b; }
     input:focus, textarea:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2); }
     textarea { min-height: 100px; resize: vertical; }
     
+    /* Yes/No Toggle Buttons */
     .toggle-group { display: flex; gap: 12px; }
     .toggle-group input[type="radio"] { display: none; }
     .toggle-label { 
@@ -78,7 +76,6 @@
       font-size: 16px; 
       cursor: pointer; 
       color: #fff; 
-      transition: all 0.2s ease; 
       text-transform: uppercase;
       border: 1px solid #334155;
     }
@@ -88,6 +85,7 @@
       box-shadow: inset 0 0 0 1px #0d6efd; 
     }
     
+    /* Submit Button */
     .submit-btn { 
       width: 100%; 
       background-color: #0d6efd; 
@@ -100,36 +98,25 @@
       text-transform: uppercase; 
       cursor: pointer; 
       margin-top: 10px; 
-      transition: background-color 0.2s ease, transform 0.1s active; 
     }
-    .submit-btn:hover { background-color: #0b5ed7; }
-    .submit-btn:active { transform: scale(0.98); }
     .submit-btn:disabled { opacity: 0.8; cursor: not-allowed; }
     
-    .branding { text-align: center; margin-top: 40px; font-size: 12px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; line-height: 1.6; }
+    /* Footer Branding */
+    .branding { text-align: center; margin-top: 40px; font-size: 12px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
     .branding a { color: #0d6efd; text-decoration: none; }
     .footer-credits { margin-top: 12px; font-size: 10px; color: #334155; }
 
     /* LIGHT MODE OVERRIDES */
     body.light-mode { background-color: #f8fafc; color: #0f172a; }
-    body.light-mode .header { border-bottom: 1px solid #e2e8f0; }
-    body.light-mode label { color: #64748b; }
     body.light-mode input[type="text"], body.light-mode textarea { background-color: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
-    body.light-mode input::placeholder, body.light-mode textarea::placeholder { color: #94a3b8; }
     body.light-mode .toggle-label { background-color: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
-    body.light-mode .toggle-group input[type="radio"]:checked + .toggle-label { background-color: #f1f5f9; border-color: #0d6efd; }
-    body.light-mode .branding { color: #94a3b8; }
-    body.light-mode .footer-credits { color: #94a3b8; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div>
-        <div class="logo-badge">
-          <div class="logo">SEND<span class="logo-blue">IT</span>IN</div>
-        </div>
-        <div class="tagline">STUPIDSIMPLE<span class="tagline-blue">CRAZY</span>FAST™</div>
+      <div class="logo-badge">
+        <div class="logo">SEND<span class="logo-blue">IT</span>IN</div>
       </div>
       <div class="theme-toggle" id="themeToggle">☀️</div>
     </div>
@@ -151,12 +138,6 @@
         <label>Work Performed</label>
         <textarea name="work_performed" placeholder="Describe work completed." required></textarea>
       </div>
-
-      <div class="form-group">
-        <label>Notes - Follow-ups - Materials</label>
-        <textarea name="notes" placeholder="Issues on site, needed for tomorrow..."></textarea>
-      </div>
-
       <div class="form-group">
         <label>Job Complete?</label>
         <div class="toggle-group">
@@ -166,57 +147,61 @@
           <label class="toggle-label" for="job-no">NO</label>
         </div>
       </div>
-
+      <div class="form-group">
+        <label>Notes - Follow-ups - Materials</label>
+        <textarea name="notes" placeholder="Issues on site, needed for tomorrow..."></textarea>
+      </div>
       <button type="submit" class="submit-btn">SEND IT IN</button>
     </form>
     
     <div class="branding">
       <p>Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
       <div class="footer-credits">
-        Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com" target="_blank">stupidsimplecrazyfast.com</a>
-        <br>
-        Joe • 717.623.2907
+        Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • Joe • 717.623.2907
       </div>
     </div>
   </div>
 
   <script>
-    // Theme Toggle Logic
+    // 1. Theme Toggle Logic
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       document.body.classList.toggle('light-mode');
-      if (document.body.classList.contains('light-mode')) {
-        themeToggle.innerText = '🌙';
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f8fafc');
-      } else {
-        themeToggle.innerText = '☀️';
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f172a');
-      }
+      themeToggle.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     });
 
-    // Form Submission Logic
+    // 2. Form Submission Logic
     const form = document.getElementById('submissionForm');
     const submitBtn = document.querySelector('.submit-btn');
     
-    // UPDATED V8 DEPLOYED URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbye0BAdQbvozSKtiasGpzge7vIF_2QNR0-gZhJs4ekXFwyYFytakZ3ChaBzLUNo4ofqFw/exec'; 
+    // YOUR LIVE GOOGLE SCRIPT URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyVx_g91DT_xCmIFjWb2UbQNOtNYurABdqzpY8-7_Qc123JO_ugsil63KutS6U7cJNc5w/exec'; 
 
     form.addEventListener('submit', e => {
       e.preventDefault();
       const originalBtnText = submitBtn.innerText;
       submitBtn.innerText = 'SENDING...';
+      submitBtn.style.backgroundColor = '#f39c12';
       submitBtn.disabled = true;
 
-      // JSON BODY FIX (Stops data bleeding/scrambling)
       const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+      
+      // TRANSLATION LAYER: Matches your "doPost" expectations
+      const payload = {
+        companyPin: formData.get('company_pin'),
+        crewId: formData.get('crew_id'),
+        workOrder: formData.get('work_order'),
+        workPerformed: formData.get('work_performed'),
+        jobComplete: formData.get('job_complete'),
+        notes: formData.get('notes')
+      };
 
       fetch(scriptURL, { 
         method: 'POST', 
         mode: 'no-cors',
-        body: JSON.stringify(data) 
+        body: JSON.stringify(payload)
       })
-      .then(response => {
+      .then(() => {
         submitBtn.innerText = 'SENT! 👍';
         submitBtn.style.backgroundColor = '#198754';
         form.reset();
@@ -234,7 +219,7 @@
       });
     });
 
-    // PWA Service Worker Registration
+    // 3. PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
