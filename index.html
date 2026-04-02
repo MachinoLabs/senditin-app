@@ -14,17 +14,19 @@
       --text: #ffffff;
       --accent: #38bdf8;
       --border: #334155;
+      --input-bg: #1e293b;
     }
 
     body.light-mode {
-      --bg: #f8fafc;
+      --bg: #f1f5f9;
       --card: #ffffff;
       --text: #0f172a;
       --accent: #0284c7;
-      --border: #e2e8f0;
+      --border: #cbd5e1;
+      --input-bg: #ffffff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
     body { 
       background-color: var(--bg); 
@@ -32,57 +34,70 @@
       display: flex; 
       justify-content: center; 
       padding: 20px; 
-      transition: all 0.3s ease; 
+      transition: background-color 0.3s ease, color 0.3s ease; 
       min-height: 100vh;
     }
 
-    .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; }
+    .container { width: 100%; max-width: 440px; display: flex; flex-direction: column; }
 
-    /* Header & Toggle */
+    /* Header */
     .header { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      margin-bottom: 25px; 
+      margin-bottom: 30px;
+      padding-bottom: 10px;
     }
-    .header h1 { font-size: 1.4rem; letter-spacing: 2px; color: var(--accent); font-weight: 900; }
+    .header h1 { font-size: 1.5rem; letter-spacing: 3px; color: var(--accent); font-weight: 900; }
     
     #theme-toggle {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       cursor: pointer;
       color: var(--text);
-    }
-
-    /* Form Fields */
-    form { display: flex; flex-direction: column; gap: 18px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; }
-
-    input, textarea {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      color: var(--text);
-      font-size: 1rem;
       outline: none;
     }
 
-    input:focus { border-color: var(--accent); }
+    /* Form Styles */
+    form { display: flex; flex-direction: column; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    
+    label { 
+      font-size: 0.75rem; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      color: var(--accent); 
+      letter-spacing: 1.5px; 
+    }
 
-    /* YES/NO Button Toggles */
-    .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .toggle-btn {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--card);
+    input, textarea {
+      background-color: var(--input-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
       color: var(--text);
-      font-weight: 700;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus, textarea:focus { border-color: var(--accent); }
+
+    /* YES/NO Pill Buttons */
+    .button-group { display: flex; gap: 12px; }
+    .toggle-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-weight: 800;
       cursor: pointer;
-      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
     }
     .toggle-btn.active {
       background-color: var(--accent);
@@ -95,23 +110,46 @@
       background-color: var(--accent);
       color: #0f172a;
       border: none;
-      border-radius: 10px;
-      padding: 18px;
-      font-size: 1.1rem;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 1.2rem;
       font-weight: 900;
       cursor: pointer;
       margin-top: 10px;
       text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
     }
+
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* Footer Branding */
     .footer {
       text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
+      margin-top: 50px;
+      padding-bottom: 30px;
     }
-    .footer p { font-size: 0.7rem; color: var(--border); letter-spacing: 2px; font-weight: 600; }
+    .footer .subline { 
+      font-size: 0.7rem; 
+      color: var(--accent); 
+      letter-spacing: 3px; 
+      font-weight: 800; 
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.3));
+    }
+    .footer p { 
+      font-size: 0.8rem; 
+      color: var(--text); 
+      letter-spacing: 4px; 
+      font-weight: 700; 
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
@@ -119,7 +157,7 @@
 <div class="container">
   <div class="header">
     <h1>SEND IT IN</h1>
-    <button id="theme-toggle">🌙</button>
+    <button id="theme-toggle" title="Toggle Light/Dark Mode">🌙</button>
   </div>
 
   <form id="submit-form">
@@ -130,29 +168,29 @@
 
     <div class="form-group">
       <label>ASSIGNMENT</label>
-      <input type="text" name="assignment" placeholder="Location / Truck #" required>
+      <input type="text" name="assignment" placeholder="Job Location / Unit" required>
     </div>
 
     <div class="form-group">
       <label>QUANTITY / VALUE</label>
-      <input type="text" name="quantity" placeholder="Loads / Tons / Amount" required>
+      <input type="text" name="quantity" placeholder="Enter Amount" required>
     </div>
 
     <div class="form-group">
       <label>REFERENCE / TICKET #</label>
-      <input type="text" name="reference" placeholder="Job #">
+      <input type="text" name="reference" placeholder="Enter Ref #">
     </div>
 
     <div class="form-group">
       <label>NOTES</label>
-      <textarea name="notes" placeholder="Additional details..."></textarea>
+      <textarea name="notes" placeholder="Any additional info..."></textarea>
     </div>
 
     <div class="form-group">
       <label>TASK COMPLETE?</label>
       <div class="button-group">
-        <button type="button" class="toggle-btn active" onclick="setComplete('YES', this)">YES</button>
-        <button type="button" class="toggle-btn" onclick="setComplete('NO', this)">NO</button>
+        <button type="button" class="toggle-btn active" id="btn-yes" onclick="setComplete('YES')">YES</button>
+        <button type="button" class="toggle-btn" id="btn-no" onclick="setComplete('NO')">NO</button>
       </div>
       <input type="hidden" name="complete" id="complete-value" value="YES">
     </div>
@@ -161,7 +199,9 @@
   </form>
 
   <div class="footer">
-    <p>LOGISTICS TRACKING V2.0</p>
+    <div class="subline">LOGISTICS TRACKING V2.0</div>
+    <img src="icon-512.png" alt="Logo">
+    <p>SEND IT IN</p>
   </div>
 </div>
 
@@ -173,11 +213,11 @@
     themeToggle.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
   });
 
-  // YES/NO Button Toggle Logic
-  function setComplete(val, btn) {
+  // YES/NO Button Logic
+  function setComplete(val) {
     document.getElementById('complete-value').value = val;
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.getElementById('btn-yes').classList.toggle('active', val === 'YES');
+    document.getElementById('btn-no').classList.toggle('active', val === 'NO');
   }
 
   // Form Submission Logic
@@ -192,15 +232,14 @@
 
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
       .then(response => {
-        alert('SUCCESS: Report Filed!');
+        alert('SUCCESS: Data Logged.');
         submitBtn.innerText = 'SEND IT IN';
         submitBtn.disabled = false;
         form.reset();
-        // Reset the YES/NO buttons to default
-        setComplete('YES', document.querySelectorAll('.toggle-btn')[0]);
+        setComplete('YES'); // Reset buttons to default
       })
       .catch(error => {
-        alert('ERROR: Check Connection.');
+        alert('ERROR: Could not send data.');
         submitBtn.innerText = 'TRY AGAIN';
         submitBtn.disabled = false;
       });
