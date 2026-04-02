@@ -8,74 +8,110 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* Reset & Base Styles */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #ffffff;
+      --accent: #38bdf8;
+      --border: #334155;
+    }
+
+    body.light-mode {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --accent: #0284c7;
+      --border: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
     
     body { 
-      background-color: #0f172a; 
-      color: #ffffff; 
+      background-color: var(--bg); 
+      color: var(--text); 
       display: flex; 
       justify-content: center; 
-      padding: 30px 20px; 
+      padding: 20px; 
+      transition: all 0.3s ease; 
+      min-height: 100vh;
     }
 
-    .container { width: 100%; max-width: 480px; }
+    .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; }
 
+    /* Header & Toggle */
     .header { 
-      text-align: center;
-      margin-bottom: 30px;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 25px; 
+    }
+    .header h1 { font-size: 1.4rem; letter-spacing: 2px; color: var(--accent); font-weight: 900; }
+    
+    #theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
     }
 
-    .header h1 { font-size: 1.8rem; letter-spacing: 2px; color: #38bdf8; text-transform: uppercase; }
-    .header p { color: #94a3b8; font-size: 0.8rem; margin-top: 5px; letter-spacing: 1px; }
+    /* Form Fields */
+    form { display: flex; flex-direction: column; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; }
 
-    /* Form Styles */
-    form { display: flex; flex-direction: column; gap: 20px; }
-
-    .form-group { display: flex; flex-direction: column; gap: 8px; }
-
-    label { 
-      font-size: 0.7rem; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      color: #38bdf8; 
-      letter-spacing: 1px;
-    }
-
-    input, textarea, select {
-      background-color: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
+    input, textarea {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 14px;
-      color: #ffffff;
+      color: var(--text);
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
     }
 
-    input:focus, textarea:focus, select:focus { border-color: #38bdf8; }
+    input:focus { border-color: var(--accent); }
 
-    textarea { resize: vertical; min-height: 80px; }
+    /* YES/NO Button Toggles */
+    .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .toggle-btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background-color: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
 
-    button {
-      background-color: #38bdf8;
+    /* Submit Button */
+    .submit-btn {
+      background-color: var(--accent);
       color: #0f172a;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 18px;
       font-size: 1.1rem;
       font-weight: 900;
       cursor: pointer;
       margin-top: 10px;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    button:disabled { background-color: #475569; cursor: not-allowed; }
-
-    /* Custom Select Styling */
-    select { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
+    /* Footer Branding */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .footer p { font-size: 0.7rem; color: var(--border); letter-spacing: 2px; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -83,23 +119,23 @@
 <div class="container">
   <div class="header">
     <h1>SEND IT IN</h1>
-    <p>UNIVERSAL LOGISTICS V2</p>
+    <button id="theme-toggle">🌙</button>
   </div>
 
   <form id="submit-form">
     <div class="form-group">
       <label>PIN NUMBER</label>
-      <input type="number" name="pin" placeholder="0000" required>
+      <input type="number" name="pin" placeholder="Enter PIN" required>
     </div>
 
     <div class="form-group">
       <label>ASSIGNMENT</label>
-      <input type="text" name="assignment" placeholder="Truck # / Location" required>
+      <input type="text" name="assignment" placeholder="Location / Truck #" required>
     </div>
 
     <div class="form-group">
       <label>QUANTITY / VALUE</label>
-      <input type="text" name="quantity" placeholder="Amount / Loads" required>
+      <input type="text" name="quantity" placeholder="Loads / Tons / Amount" required>
     </div>
 
     <div class="form-group">
@@ -109,25 +145,44 @@
 
     <div class="form-group">
       <label>NOTES</label>
-      <textarea name="notes" placeholder="Enter details here..."></textarea>
+      <textarea name="notes" placeholder="Additional details..."></textarea>
     </div>
 
     <div class="form-group">
       <label>TASK COMPLETE?</label>
-      <select name="complete">
-        <option value="YES">YES</option>
-        <option value="NO">NO</option>
-      </select>
+      <div class="button-group">
+        <button type="button" class="toggle-btn active" onclick="setComplete('YES', this)">YES</button>
+        <button type="button" class="toggle-btn" onclick="setComplete('NO', this)">NO</button>
+      </div>
+      <input type="hidden" name="complete" id="complete-value" value="YES">
     </div>
 
-    <button type="submit" id="submit-btn">SEND IT IN</button>
+    <button type="submit" class="submit-btn" id="submit-btn">SEND IT IN</button>
   </form>
+
+  <div class="footer">
+    <p>LOGISTICS TRACKING V2.0</p>
+  </div>
 </div>
 
 <script>
+  // Theme Toggle Logic
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    themeToggle.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+  });
+
+  // YES/NO Button Toggle Logic
+  function setComplete(val, btn) {
+    document.getElementById('complete-value').value = val;
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Form Submission Logic
   const form = document.getElementById('submit-form');
   const submitBtn = document.getElementById('submit-btn');
-  // YOUR LIVE ROUTER URL
   const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
 
   form.addEventListener('submit', e => {
@@ -137,23 +192,19 @@
 
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
       .then(response => {
-        alert('SUCCESS: Data Logged.');
+        alert('SUCCESS: Report Filed!');
         submitBtn.innerText = 'SEND IT IN';
         submitBtn.disabled = false;
         form.reset();
+        // Reset the YES/NO buttons to default
+        setComplete('YES', document.querySelectorAll('.toggle-btn')[0]);
       })
       .catch(error => {
-        alert('ERROR: Check PIN and connection.');
+        alert('ERROR: Check Connection.');
         submitBtn.innerText = 'TRY AGAIN';
         submitBtn.disabled = false;
       });
   });
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
-    });
-  }
 </script>
 
 </body>
