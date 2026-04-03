@@ -22,7 +22,7 @@
       transition: background-color 0.3s ease, color 0.3s ease; 
       min-height: 100vh;
     }
-    .container { width: 100%; max-width: 480px; }
+    .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
     .header { 
       display: flex; 
@@ -59,7 +59,6 @@
     }
     input:focus, textarea:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2); }
     
-    /* YES/NO Toggle Fix */
     .toggle-group { display: flex; gap: 10px; }
     .toggle-group input[type="radio"] { display: none; }
     .toggle-label { 
@@ -77,16 +76,23 @@
     }
 
     /* ==========================================
-       MODAL STYLING (Integrated)
+       STATIC FOOTER STYLING (Always Visible)
+       ========================================== */
+    .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e293b; }
+    .footer-tag { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+    .footer-credits { font-size: 11px; line-height: 1.6; color: #334155; }
+    .footer-credits a { color: #0d6efd; text-decoration: none; font-weight: 700; }
+
+    /* ==========================================
+       MODAL STYLING
        ========================================== */
     .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
     .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none; }
     .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-    
     .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
     .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-    .ml-info-tab { border-radius: 20px; border: 1px solid #cbd5e1; background: #f1f5f9; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .ml-info-tab { border-radius: 20px; border: 1px solid #cbd5e1; background: #f1f5f9; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .ml-info-tab-active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
     .ml-info-body { max-height: 50vh; overflow-y: auto; font-size: 14px; line-height: 1.6; }
     .ml-info-panel[hidden] { display: none; }
@@ -96,6 +102,8 @@
     body.light-mode input, body.light-mode textarea, body.light-mode .toggle-label { background-color: #ffffff; border: 1px solid #cbd5e1; color: #475569; }
     body.light-mode .logo-badge { background-color: #ffffff; border-color: #cbd5e1; }
     body.light-mode .logo { color: #0f172a; }
+    body.light-mode .footer { border-top-color: #cbd5e1; }
+    body.light-mode .footer-tag { color: #64748b; }
   </style>
 </head>
 <body>
@@ -143,6 +151,14 @@
       <button type="submit" class="submit-btn">SEND IT IN</button>
     </form>
 
+    <footer class="footer">
+      <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+      <div class="footer-credits">
+        Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>
+        Joe Machino • 717.623.2907
+      </div>
+    </footer>
+
     <div id="infoOverlay" class="ml-info-overlay" hidden></div>
     <div id="infoModal" class="ml-info-modal" hidden>
       <div class="ml-info-modal-inner">
@@ -158,16 +174,16 @@
         <div class="ml-info-body">
           <section class="ml-info-panel" data-panel="about">
             <p><strong>SEND IT IN</strong> is a high-speed data routing tool built for professional field operations.</p>
-            <p style="margin-top:10px;">This app works offline and syncs instantly once a connection is established.</p>
+            <p style="margin-top:10px;">Runs instantly, works offline, and syncs directly to your Google Sheets.</p>
           </section>
           <section class="ml-info-panel" data-panel="services" hidden>
             <p><strong>MachinoLabs Digital Solutions</strong></p>
-            <p style="margin-top:10px;">We specialize in StupidSimpleCrazyFast™ workflows for busy businesses.</p>
-            <p style="margin-top:10px; color:#0d6efd; font-weight:bold;">Stay tuned for more upcoming SSCF products!</p>
+            <p style="margin-top:10px;">Custom micro-apps and automation workflows.</p>
+            <p style="margin-top:10px; color:#0d6efd; font-weight:bold;">Stay tuned for more upcoming StupidSimpleCrazyFast™ products!</p>
           </section>
           <section class="ml-info-panel" data-panel="faq" hidden>
-            <p><strong>Is my data secure?</strong><br>Yes. Data is routed directly to your private encrypted Google Sheet.</p>
-            <p style="margin-top:10px;"><strong>Built by MachinoLabs</strong><br>Joe • 717.623.2907</p>
+            <p><strong>Does this app track me?</strong><br>No. No ads, no tracking. Your data is routed privately.</p>
+            <p style="margin-top:10px;"><strong>Contact Support:</strong><br>Joe Machino • 717.623.2907</p>
           </section>
         </div>
       </div>
@@ -208,7 +224,7 @@
       });
     });
 
-    // 3. Form Logic (The "Brain")
+    // 3. Form Submission Logic
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
     const form = document.getElementById('submissionForm');
     const btn = document.querySelector('.submit-btn');
