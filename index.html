@@ -2,72 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SEND IT IN</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* ==========================================
-       CORE UI STYLING (The "Perfect" Look)
-       ========================================== */
+    /* 1. CORE STYLING & THEMES */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
     body { 
-      background-color: #0f172a; 
-      color: #ffffff; 
-      display: flex; 
-      justify-content: center; 
-      padding: 20px; 
-      transition: background-color 0.3s ease, color 0.3s ease; 
-      min-height: 100vh;
+      background-color: #0f172a; color: #ffffff; display: flex; justify-content: center; 
+      padding: 20px; transition: background 0.3s ease; min-height: 100vh;
     }
+    body.light-mode { background-color: #f1f5f9; color: #0f172a; }
+
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    .header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      border-bottom: 1px solid #1e293b; 
-      padding-bottom: 15px; 
-      margin-bottom: 25px; 
-    }
+    /* 2. HEADER & LOGO */
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; }
+    body.light-mode .header { border-bottom-color: #cbd5e1; }
+
+    .logo-badge { background-color: #0f172a; padding: 8px 14px; border-radius: 6px; border: 1px solid #1e293b; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    body.light-mode .logo-badge { background-color: #ffffff; border-color: #cbd5e1; }
     
-    .logo-badge { 
-      background-color: #0f172a; 
-      padding: 8px 14px; 
-      border-radius: 6px; 
-      border: 1px solid #1e293b;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
     .logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #ffffff; }
+    body.light-mode .logo { color: #0f172a; }
     .logo-blue { color: #0d6efd; }
     
-    .nav-controls { display: flex; gap: 15px; align-items: center; }
+    .nav-controls { display: flex; gap: 18px; align-items: center; }
     .nav-btn { font-size: 22px; cursor: pointer; user-select: none; opacity: 0.8; transition: opacity 0.2s; }
     .nav-btn:hover { opacity: 1; }
 
-    /* ==========================================
-       FORM & TOGGLE STYLING
-       ========================================== */
+    /* 3. FORM ELEMENTS */
     .form-group { margin-bottom: 18px; }
     label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     
     input, textarea { 
       width: 100%; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; 
-      color: #ffffff; padding: 14px; font-size: 16px; transition: all 0.2s; 
+      color: #ffffff; padding: 14px; font-size: 16px; transition: all 0.2s; -webkit-appearance: none;
     }
+    body.light-mode input, body.light-mode textarea { background-color: #ffffff; border-color: #cbd5e1; color: #1e293b; }
     input:focus, textarea:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2); }
     
+    /* Toggle Buttons Fix */
     .toggle-group { display: flex; gap: 10px; }
     .toggle-group input[type="radio"] { display: none; }
     .toggle-label { 
       flex: 1; text-align: center; background-color: #1e293b; padding: 14px; border-radius: 8px; 
-      font-weight: 900; cursor: pointer; color: #94a3b8; border: 1px solid #334155; transition: all 0.2s;
+      font-weight: 900; cursor: pointer; color: #94a3b8; border: 1px solid #334155;
     }
-    /* Fixed Contrast: Forces White Text on Blue Background when active */
+    body.light-mode .toggle-label { background-color: #ffffff; border-color: #cbd5e1; }
     .toggle-group input[type="radio"]:checked + .toggle-label { 
-      background-color: #0d6efd; border-color: #0d6efd; color: #ffffff !important; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+      background-color: #0d6efd !important; border-color: #0d6efd !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
     }
     
     .submit-btn { 
@@ -75,35 +62,31 @@
       padding: 18px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; 
     }
 
-    /* ==========================================
-       STATIC FOOTER STYLING (Always Visible)
-       ========================================== */
-    .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e293b; }
+    /* 4. FOOTER */
+    .footer { text-align: center; margin-top: auto; padding: 30px 0 10px; }
     .footer-tag { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; }
     .footer-credits { font-size: 11px; line-height: 1.6; color: #334155; }
     .footer-credits a { color: #0d6efd; text-decoration: none; font-weight: 700; }
 
-    /* ==========================================
-       MODAL STYLING
-       ========================================== */
+    /* 5. MODAL */
     .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
     .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none; }
-    .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+    .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; }
     .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-    .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+    .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; }
     .ml-info-tab { border-radius: 20px; border: 1px solid #cbd5e1; background: #f1f5f9; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .ml-info-tab-active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
-    .ml-info-body { max-height: 50vh; overflow-y: auto; font-size: 14px; line-height: 1.6; }
     .ml-info-panel[hidden] { display: none; }
-    
-    /* Light Mode Overrides */
-    body.light-mode { background-color: #f1f5f9; color: #0f172a; }
-    body.light-mode input, body.light-mode textarea, body.light-mode .toggle-label { background-color: #ffffff; border: 1px solid #cbd5e1; color: #475569; }
-    body.light-mode .logo-badge { background-color: #ffffff; border-color: #cbd5e1; }
-    body.light-mode .logo { color: #0f172a; }
-    body.light-mode .footer { border-top-color: #cbd5e1; }
-    body.light-mode .footer-tag { color: #64748b; }
+
+    /* 6. AUTO-UPDATE TOAST */
+    #update-toast {
+      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+      background: #0d6efd; color: white; padding: 12px 20px; border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 15px;
+      z-index: 10000; font-weight: 700; font-size: 14px; border: 1px solid rgba(255,255,255,0.3);
+    }
+    #update-toast button { background: white; color: #0d6efd; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 900; cursor: pointer; font-size: 11px; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -119,33 +102,16 @@
     </div>
 
     <form id="submissionForm">
-      <div class="form-group">
-        <label>PIN NUMBER</label>
-        <input type="number" name="pin" placeholder="Enter PIN" required>
-      </div>
-      <div class="form-group">
-        <label>ASSIGNMENT</label>
-        <input type="text" name="assignment" placeholder="What/Where?" required>
-      </div>
-      <div class="form-group">
-        <label>QUANTITY / VALUE</label>
-        <input type="text" name="quantity" placeholder="Amount / Count">
-      </div>
-      <div class="form-group">
-        <label>REFERENCE #</label>
-        <input type="text" name="reference" placeholder="Ticket or Invoice #">
-      </div>
-      <div class="form-group">
-        <label>NOTES</label>
-        <textarea name="notes" placeholder="Extra details..."></textarea>
-      </div>
+      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" required></div>
+      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" required></div>
+      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity"></div>
+      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference"></div>
+      <div class="form-group"><label>NOTES</label><textarea name="notes"></textarea></div>
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
-          <input type="radio" id="yes" name="complete" value="YES" checked>
-          <label class="toggle-label" for="yes">YES</label>
-          <input type="radio" id="no" name="complete" value="NO">
-          <label class="toggle-label" for="no">NO</label>
+          <input type="radio" id="yes" name="complete" value="YES" checked><label class="toggle-label" for="yes">YES</label>
+          <input type="radio" id="no" name="complete" value="NO"><label class="toggle-label" for="no">NO</label>
         </div>
       </div>
       <button type="submit" class="submit-btn">SEND IT IN</button>
@@ -162,84 +128,73 @@
     <div id="infoOverlay" class="ml-info-overlay" hidden></div>
     <div id="infoModal" class="ml-info-modal" hidden>
       <div class="ml-info-modal-inner">
-        <div class="ml-info-header">
-          <h2 style="font-size: 16px;">App Information</h2>
-          <div id="infoCloseBtn" style="cursor:pointer; font-weight:bold;">✕</div>
-        </div>
+        <div class="ml-info-header"><h2>App Information</h2><div id="infoCloseBtn" style="cursor:pointer">✕</div></div>
         <div class="ml-info-tabs">
           <button class="ml-info-tab ml-info-tab-active" data-tab="about">About</button>
           <button class="ml-info-tab" data-tab="services">Our Services</button>
           <button class="ml-info-tab" data-tab="faq">FAQ</button>
         </div>
         <div class="ml-info-body">
-          <section class="ml-info-panel" data-panel="about">
-            <p><strong>SEND IT IN</strong> is a high-speed data routing tool built for professional field operations.</p>
-            <p style="margin-top:10px;">Runs instantly, works offline, and syncs directly to your Google Sheets.</p>
-          </section>
-          <section class="ml-info-panel" data-panel="services" hidden>
-            <p><strong>MachinoLabs Digital Solutions</strong></p>
-            <p style="margin-top:10px;">Custom micro-apps and automation workflows.</p>
-            <p style="margin-top:10px; color:#0d6efd; font-weight:bold;">Stay tuned for more upcoming StupidSimpleCrazyFast™ products!</p>
-          </section>
-          <section class="ml-info-panel" data-panel="faq" hidden>
-            <p><strong>Does this app track me?</strong><br>No. No ads, no tracking. Your data is routed privately.</p>
-            <p style="margin-top:10px;"><strong>Contact Support:</strong><br>Joe Machino • 717.623.2907</p>
-          </section>
+          <section class="ml-info-panel" data-panel="about"><p><strong>SEND IT IN</strong> is a neutral data routing engine for field operations. Offline-first and high-speed.</p></section>
+          <section class="ml-info-panel" data-panel="services" hidden><p><strong>MachinoLabs</strong> specializes in SSCF™ micro-apps. Stay tuned for more products!</p></section>
+          <section class="ml-info-panel" data-panel="faq" hidden><p><strong>Security:</strong> Data routes directly to your private Google Sheets. No middle-man tracking.</p></section>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // 1. Theme Logic
+    // 1. UI LOGIC (Theme & Modal)
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       document.body.classList.toggle('light-mode');
       themeToggle.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     });
 
-    // 2. Modal Logic
     const infoBtn = document.getElementById('infoBtn');
     const infoModal = document.getElementById('infoModal');
     const infoOverlay = document.getElementById('infoOverlay');
-    const infoClose = document.getElementById('infoCloseBtn');
-    const tabs = document.querySelectorAll('.ml-info-tab');
-    const panels = document.querySelectorAll('.ml-info-panel');
+    const toggleModal = () => { infoModal.hidden = !infoModal.hidden; infoOverlay.hidden = !infoOverlay.hidden; };
+    [infoBtn, infoOverlay, document.getElementById('infoCloseBtn')].forEach(el => el.addEventListener('click', toggleModal));
 
-    const toggleModal = () => {
-      const isHidden = infoModal.hidden;
-      infoModal.hidden = !isHidden;
-      infoOverlay.hidden = !isHidden;
-    };
-
-    infoBtn.addEventListener('click', toggleModal);
-    infoOverlay.addEventListener('click', toggleModal);
-    infoClose.addEventListener('click', toggleModal);
-
-    tabs.forEach(tab => {
+    document.querySelectorAll('.ml-info-tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('ml-info-tab-active'));
+        document.querySelectorAll('.ml-info-tab').forEach(t => t.classList.remove('ml-info-tab-active'));
         tab.classList.add('ml-info-tab-active');
-        panels.forEach(p => p.hidden = (p.dataset.panel !== tab.dataset.tab));
+        document.querySelectorAll('.ml-info-panel').forEach(p => p.hidden = (p.dataset.panel !== tab.dataset.tab));
       });
     });
 
-    // 3. Form Submission Logic
+    // 2. AUTO-UPDATE SYSTEM
+    let newWorker;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              const toast = document.createElement('div');
+              toast.id = 'update-toast';
+              toast.innerHTML = `<span>New version!</span><button id="upBtn">Update</button>`;
+              document.body.appendChild(toast);
+              document.getElementById('upBtn').addEventListener('click', () => newWorker.postMessage({ action: 'skipWaiting' }));
+            }
+          });
+        });
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+    }
+
+    // 3. SUBMISSION LOGIC
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
     const form = document.getElementById('submissionForm');
-    const btn = document.querySelector('.submit-btn');
-
     form.addEventListener('submit', e => {
       e.preventDefault();
-      btn.innerText = 'SENDING...';
-      btn.disabled = true;
+      const btn = document.querySelector('.submit-btn');
+      btn.innerText = 'SENDING...'; btn.disabled = true;
       fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-        .then(res => {
-          btn.innerText = 'SENT! 👍';
-          form.reset();
-          setTimeout(() => { btn.innerText = 'SEND IT IN'; btn.disabled = false; }, 3000);
-        })
-        .catch(err => { btn.innerText = 'RETRY'; btn.disabled = false; });
+        .then(() => { btn.innerText = 'SENT! 👍'; form.reset(); setTimeout(() => { btn.innerText = 'SEND IT IN'; btn.disabled = false; }, 3000); })
+        .catch(() => { btn.innerText = 'RETRY'; btn.disabled = false; });
     });
   </script>
 </body>
