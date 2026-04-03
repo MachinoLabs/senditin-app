@@ -8,7 +8,9 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* Reset & Base Styles - From your "Perfect" UI */
+    /* ==========================================
+       CORE UI STYLING (The "Perfect" Look)
+       ========================================== */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
     body { 
@@ -16,13 +18,12 @@
       color: #ffffff; 
       display: flex; 
       justify-content: center; 
-      padding: 30px 20px; 
+      padding: 20px; 
       transition: background-color 0.3s ease, color 0.3s ease; 
       min-height: 100vh;
     }
     .container { width: 100%; max-width: 480px; }
     
-    /* Header & Logo Badge - Restored from original */
     .header { 
       display: flex; 
       justify-content: space-between; 
@@ -36,58 +37,65 @@
       background-color: #0f172a; 
       padding: 8px 14px; 
       border-radius: 6px; 
-      display: inline-flex; 
-      align-items: center;
       border: 1px solid #1e293b;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
-    .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; color: #ffffff; }
+    .logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #ffffff; }
     .logo-blue { color: #0d6efd; }
     
-    .theme-toggle { font-size: 22px; cursor: pointer; user-select: none; }
+    .nav-controls { display: flex; gap: 15px; align-items: center; }
+    .nav-btn { font-size: 22px; cursor: pointer; user-select: none; opacity: 0.8; transition: opacity 0.2s; }
+    .nav-btn:hover { opacity: 1; }
+
+    /* ==========================================
+       FORM & TOGGLE STYLING
+       ========================================== */
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    /* Form Elements - Neutral Fields but Original Style */
-    .form-group { margin-bottom: 20px; }
-    label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    
-    input[type="text"], input[type="number"], textarea { 
-      width: 100%; 
-      background-color: #1e293b; 
-      border: 1px solid #334155; 
-      border-radius: 6px; 
-      color: #ffffff; 
-      padding: 14px; 
-      font-size: 16px; 
-      transition: all 0.3s ease; 
+    input, textarea { 
+      width: 100%; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; 
+      color: #ffffff; padding: 14px; font-size: 16px; transition: all 0.2s; 
     }
     input:focus, textarea:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2); }
-    textarea { min-height: 100px; }
     
-    /* Yes/No Toggle Buttons */
-    .toggle-group { display: flex; gap: 12px; }
+    /* YES/NO Toggle Fix */
+    .toggle-group { display: flex; gap: 10px; }
     .toggle-group input[type="radio"] { display: none; }
     .toggle-label { 
-      flex: 1; text-align: center; background-color: #1e293b; padding: 16px; border-radius: 6px; 
-      font-weight: 900; font-size: 16px; cursor: pointer; color: #fff; border: 1px solid #334155;
+      flex: 1; text-align: center; background-color: #1e293b; padding: 14px; border-radius: 8px; 
+      font-weight: 900; cursor: pointer; color: #94a3b8; border: 1px solid #334155; transition: all 0.2s;
     }
+    /* Fixed Contrast: Forces White Text on Blue Background when active */
     .toggle-group input[type="radio"]:checked + .toggle-label { 
-      background-color: #334155; border-color: #0d6efd; box-shadow: inset 0 0 0 1px #0d6efd; 
+      background-color: #0d6efd; border-color: #0d6efd; color: #ffffff !important; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
     }
     
-    /* Submit Button */
     .submit-btn { 
-      width: 100%; background-color: #0d6efd; color: #ffffff; border: none; border-radius: 6px; 
+      width: 100%; background-color: #0d6efd; color: #ffffff; border: none; border-radius: 8px; 
       padding: 18px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; 
     }
-    
-    /* Footer Branding - Restored */
-    .branding { text-align: center; margin-top: 40px; font-size: 12px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .footer-credits { margin-top: 12px; font-size: 10px; color: #334155; }
-    .footer-credits a { color: #0d6efd; text-decoration: none; }
 
+    /* ==========================================
+       MODAL STYLING (Integrated)
+       ========================================== */
+    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
+    .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+    .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none; }
+    .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+    
+    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+    .ml-info-tab { border-radius: 20px; border: 1px solid #cbd5e1; background: #f1f5f9; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .ml-info-tab-active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+    .ml-info-body { max-height: 50vh; overflow-y: auto; font-size: 14px; line-height: 1.6; }
+    .ml-info-panel[hidden] { display: none; }
+    
     /* Light Mode Overrides */
-    body.light-mode { background-color: #f8fafc; color: #0f172a; }
-    body.light-mode input, body.light-mode textarea, body.light-mode .toggle-label { background-color: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
+    body.light-mode { background-color: #f1f5f9; color: #0f172a; }
+    body.light-mode input, body.light-mode textarea, body.light-mode .toggle-label { background-color: #ffffff; border: 1px solid #cbd5e1; color: #475569; }
+    body.light-mode .logo-badge { background-color: #ffffff; border-color: #cbd5e1; }
+    body.light-mode .logo { color: #0f172a; }
   </style>
 </head>
 <body>
@@ -96,78 +104,126 @@
       <div class="logo-badge">
         <div class="logo">SEND<span class="logo-blue">IT</span>IN</div>
       </div>
-      <div class="theme-toggle" id="themeToggle">☀️</div>
+      <div class="nav-controls">
+        <div class="nav-btn" id="infoBtn">ⓘ</div>
+        <div class="nav-btn" id="themeToggle">☀️</div>
+      </div>
     </div>
 
     <form id="submissionForm">
       <div class="form-group">
         <label>PIN NUMBER</label>
-        <input type="number" name="pin" placeholder="Enter 4-digit PIN" required>
+        <input type="number" name="pin" placeholder="Enter PIN" required>
       </div>
       <div class="form-group">
         <label>ASSIGNMENT</label>
-        <input type="text" name="assignment" placeholder="Job Location / Unit" required>
+        <input type="text" name="assignment" placeholder="Where/What?" required>
       </div>
       <div class="form-group">
         <label>QUANTITY / VALUE</label>
-        <input type="text" name="quantity" placeholder="Enter Amount" required>
+        <input type="text" name="quantity" placeholder="Amount / Count">
       </div>
       <div class="form-group">
-        <label>REFERENCE / TICKET #</label>
-        <input type="text" name="reference" placeholder="Enter Ref #">
+        <label>REFERENCE #</label>
+        <input type="text" name="reference" placeholder="Ticket or Invoice #">
       </div>
       <div class="form-group">
         <label>NOTES</label>
-        <textarea name="notes" placeholder="Any additional info..."></textarea>
+        <textarea name="notes" placeholder="Extra details..."></textarea>
       </div>
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
-          <input type="radio" id="job-yes" name="complete" value="YES" checked required>
-          <label class="toggle-label" for="job-yes">YES</label>
-          <input type="radio" id="job-no" name="complete" value="NO">
-          <label class="toggle-label" for="job-no">NO</label>
+          <input type="radio" id="yes" name="complete" value="YES" checked>
+          <label class="toggle-label" for="yes">YES</label>
+          <input type="radio" id="no" name="complete" value="NO">
+          <label class="toggle-label" for="no">NO</label>
         </div>
       </div>
       <button type="submit" class="submit-btn">SEND IT IN</button>
     </form>
-    
-    <div class="branding">
-      <p>LOGISTICS TRACKING V2.0</p>
-      <div class="footer-credits">
-        Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • Joe • 717.623.2907
+
+    <div id="infoOverlay" class="ml-info-overlay" hidden></div>
+    <div id="infoModal" class="ml-info-modal" hidden>
+      <div class="ml-info-modal-inner">
+        <div class="ml-info-header">
+          <h2 style="font-size: 16px;">App Information</h2>
+          <div id="infoCloseBtn" style="cursor:pointer; font-weight:bold;">✕</div>
+        </div>
+        <div class="ml-info-tabs">
+          <button class="ml-info-tab ml-info-tab-active" data-tab="about">About</button>
+          <button class="ml-info-tab" data-tab="services">Our Services</button>
+          <button class="ml-info-tab" data-tab="faq">FAQ</button>
+        </div>
+        <div class="ml-info-body">
+          <section class="ml-info-panel" data-panel="about">
+            <p><strong>SEND IT IN</strong> is a high-speed data routing tool built for professional field operations.</p>
+            <p style="margin-top:10px;">This app works offline and syncs instantly once a connection is established.</p>
+          </section>
+          <section class="ml-info-panel" data-panel="services" hidden>
+            <p><strong>MachinoLabs Digital Solutions</strong></p>
+            <p style="margin-top:10px;">We specialize in StupidSimpleCrazyFast™ workflows for busy businesses.</p>
+            <p style="margin-top:10px; color:#0d6efd; font-weight:bold;">Stay tuned for more upcoming SSCF products!</p>
+          </section>
+          <section class="ml-info-panel" data-panel="faq" hidden>
+            <p><strong>Is my data secure?</strong><br>Yes. Data is routed directly to your private encrypted Google Sheet.</p>
+            <p style="margin-top:10px;"><strong>Built by MachinoLabs</strong><br>Joe • 717.623.2907</p>
+          </section>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Theme Toggle Logic
+    // 1. Theme Logic
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       document.body.classList.toggle('light-mode');
       themeToggle.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     });
 
-    // Form Submission Logic
+    // 2. Modal Logic
+    const infoBtn = document.getElementById('infoBtn');
+    const infoModal = document.getElementById('infoModal');
+    const infoOverlay = document.getElementById('infoOverlay');
+    const infoClose = document.getElementById('infoCloseBtn');
+    const tabs = document.querySelectorAll('.ml-info-tab');
+    const panels = document.querySelectorAll('.ml-info-panel');
+
+    const toggleModal = () => {
+      const isHidden = infoModal.hidden;
+      infoModal.hidden = !isHidden;
+      infoOverlay.hidden = !isHidden;
+    };
+
+    infoBtn.addEventListener('click', toggleModal);
+    infoOverlay.addEventListener('click', toggleModal);
+    infoClose.addEventListener('click', toggleModal);
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('ml-info-tab-active'));
+        tab.classList.add('ml-info-tab-active');
+        panels.forEach(p => p.hidden = (p.dataset.panel !== tab.dataset.tab));
+      });
+    });
+
+    // 3. Form Logic (The "Brain")
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
     const form = document.getElementById('submissionForm');
-    const submitBtn = document.querySelector('.submit-btn');
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec'; 
+    const btn = document.querySelector('.submit-btn');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      submitBtn.innerText = 'SENDING...';
-      submitBtn.disabled = true;
-
+      btn.innerText = 'SENDING...';
+      btn.disabled = true;
       fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-        .then(response => {
-          submitBtn.innerText = 'SENT! 👍';
+        .then(res => {
+          btn.innerText = 'SENT! 👍';
           form.reset();
-          setTimeout(() => { submitBtn.innerText = 'SEND IT IN'; submitBtn.disabled = false; }, 3000);
+          setTimeout(() => { btn.innerText = 'SEND IT IN'; btn.disabled = false; }, 3000);
         })
-        .catch(error => {
-          submitBtn.innerText = 'ERROR - TRY AGAIN';
-          submitBtn.disabled = false;
-        });
+        .catch(err => { btn.innerText = 'RETRY'; btn.disabled = false; });
     });
   </script>
 </body>
