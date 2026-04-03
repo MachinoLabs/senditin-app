@@ -3,90 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SEND IT IN</title>
+  <title>SEND IT IN | MachinoLabs</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* 1. CORE STYLING & THEMES */
+    /* 1. THEME VARIABLES - CRISPER CONTRAST */
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text-main: #ffffff;
+      --text-muted: #cbd5e1; /* Brighter than before to avoid "dull" look */
+      --accent: #0d6efd;
+      --accent-hover: #0a58ca;
+    }
+
+    body.light-mode {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #0d6efd;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
     body { 
-      background-color: #0f172a; color: #ffffff; display: flex; justify-content: center; 
-      padding: 20px; transition: background 0.3s ease; min-height: 100vh;
+      background-color: var(--bg); 
+      color: var(--text-main); 
+      display: flex; 
+      justify-content: center; 
+      padding: 20px; 
+      transition: all 0.3s ease; 
+      min-height: 100vh;
     }
-    body.light-mode { background-color: #f1f5f9; color: #0f172a; }
 
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    /* 2. HEADER & LOGO */
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; }
-    body.light-mode .header { border-bottom-color: #cbd5e1; }
+    /* 2. HEADER - REFINED */
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      border-bottom: 2px solid var(--border); 
+      padding-bottom: 15px; 
+      margin-bottom: 30px; 
+    }
 
-    .logo-badge { background-color: #0f172a; padding: 8px 14px; border-radius: 6px; border: 1px solid #1e293b; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    body.light-mode .logo-badge { background-color: #ffffff; border-color: #cbd5e1; }
+    .logo-badge { 
+      background-color: var(--card); 
+      padding: 10px 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+    }
     
-    .logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #ffffff; }
-    body.light-mode .logo { color: #0f172a; }
-    .logo-blue { color: #0d6efd; }
+    .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; color: var(--text-main); }
+    .logo-blue { color: var(--accent); }
     
-    .nav-controls { display: flex; gap: 18px; align-items: center; }
-    .nav-btn { font-size: 22px; cursor: pointer; user-select: none; opacity: 0.8; transition: opacity 0.2s; }
-    .nav-btn:hover { opacity: 1; }
+    .nav-controls { display: flex; gap: 20px; align-items: center; }
+    .nav-btn { font-size: 24px; cursor: pointer; user-select: none; transition: transform 0.1s; }
+    .nav-btn:active { transform: scale(0.9); }
 
-    /* 3. FORM ELEMENTS */
-    .form-group { margin-bottom: 18px; }
-    label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    /* 3. FORM ELEMENTS - ADDING "PUNCH" */
+    .form-group { margin-bottom: 22px; }
+    label { 
+      display: block; 
+      font-size: 12px; 
+      font-weight: 800; 
+      color: var(--text-muted); 
+      margin-bottom: 8px; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+    }
     
     input, textarea { 
-      width: 100%; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; 
-      color: #ffffff; padding: 14px; font-size: 16px; transition: all 0.2s; -webkit-appearance: none;
+      width: 100%; 
+      background-color: var(--card); 
+      border: 2px solid var(--border); 
+      border-radius: 10px; 
+      color: var(--text-main); 
+      padding: 16px; 
+      font-size: 16px; 
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
     }
-    body.light-mode input, body.light-mode textarea { background-color: #ffffff; border-color: #cbd5e1; color: #1e293b; }
-    input:focus, textarea:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2); }
+    input::placeholder, textarea::placeholder { color: #64748b; font-weight: 500; }
     
-    /* Toggle Buttons Fix */
-    .toggle-group { display: flex; gap: 10px; }
+    input:focus, textarea:focus { 
+      outline: none; 
+      border-color: var(--accent); 
+      box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15); 
+    }
+    
+    /* Toggle Buttons - High Contrast Fix */
+    .toggle-group { display: flex; gap: 12px; }
     .toggle-group input[type="radio"] { display: none; }
     .toggle-label { 
-      flex: 1; text-align: center; background-color: #1e293b; padding: 14px; border-radius: 8px; 
-      font-weight: 900; cursor: pointer; color: #94a3b8; border: 1px solid #334155;
+      flex: 1; text-align: center; background-color: var(--card); padding: 16px; border-radius: 10px; 
+      font-weight: 900; cursor: pointer; color: var(--text-muted); border: 2px solid var(--border); transition: all 0.2s;
     }
-    body.light-mode .toggle-label { background-color: #ffffff; border-color: #cbd5e1; }
     .toggle-group input[type="radio"]:checked + .toggle-label { 
-      background-color: #0d6efd !important; border-color: #0d6efd !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+      background: linear-gradient(145deg, #0d6efd, #0a58ca);
+      border-color: var(--accent); 
+      color: #ffffff !important; 
+      box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
     }
     
     .submit-btn { 
-      width: 100%; background-color: #0d6efd; color: #ffffff; border: none; border-radius: 8px; 
-      padding: 18px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; 
+      width: 100%; 
+      background: linear-gradient(145deg, #0d6efd, #0a58ca);
+      color: #ffffff; border: none; border-radius: 10px; 
+      padding: 20px; font-size: 18px; font-weight: 900; 
+      text-transform: uppercase; cursor: pointer; margin-top: 15px;
+      box-shadow: 0 4px 14px rgba(13, 110, 253, 0.4);
     }
+    .submit-btn:active { transform: translateY(1px); box-shadow: none; }
 
-    /* 4. FOOTER */
-    .footer { text-align: center; margin-top: auto; padding: 30px 0 10px; }
-    .footer-tag { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-    .footer-credits { font-size: 11px; line-height: 1.6; color: #334155; }
-    .footer-credits a { color: #0d6efd; text-decoration: none; font-weight: 700; }
+    /* 4. FOOTER - SIGNATURE STYLE */
+    .footer { text-align: center; margin-top: auto; padding: 40px 0 20px; border-top: 1px solid var(--border); }
+    .footer-tag { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .footer-credits { font-size: 13px; line-height: 1.8; color: var(--text-muted); }
+    .footer-credits a { color: var(--accent); text-decoration: none; font-weight: 800; }
 
     /* 5. MODAL */
-    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
+    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 998; }
     .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none; }
-    .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; }
-    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-    .ml-info-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; }
-    .ml-info-tab { border-radius: 20px; border: 1px solid #cbd5e1; background: #f1f5f9; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .ml-info-modal-inner { background: #f8fafc; color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 420px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
+    .ml-info-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+    .ml-info-tab { border-radius: 30px; border: 2px solid #cbd5e1; background: #f1f5f9; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
     .ml-info-tab-active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+    .ml-info-panel { font-size: 15px; line-height: 1.7; }
     .ml-info-panel[hidden] { display: none; }
 
     /* 6. AUTO-UPDATE TOAST */
     #update-toast {
-      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-      background: #0d6efd; color: white; padding: 12px 20px; border-radius: 50px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 15px;
-      z-index: 10000; font-weight: 700; font-size: 14px; border: 1px solid rgba(255,255,255,0.3);
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #0d6efd; color: white; padding: 14px 24px; border-radius: 50px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px;
+      z-index: 10000; font-weight: 800; font-size: 14px; border: 2px solid rgba(255,255,255,0.3);
     }
-    #update-toast button { background: white; color: #0d6efd; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 900; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+    #update-toast button { background: white; color: #0d6efd; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 900; cursor: pointer; font-size: 11px; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -102,23 +163,40 @@
     </div>
 
     <form id="submissionForm">
-      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" required></div>
-      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" required></div>
-      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity"></div>
-      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference"></div>
-      <div class="form-group"><label>NOTES</label><textarea name="notes"></textarea></div>
+      <div class="form-group">
+        <label>PIN NUMBER</label>
+        <input type="number" name="pin" placeholder="Enter 4-Digit PIN" required>
+      </div>
+      <div class="form-group">
+        <label>ASSIGNMENT</label>
+        <input type="text" name="assignment" placeholder="Job Site or Unit Name" required>
+      </div>
+      <div class="form-group">
+        <label>QUANTITY / VALUE</label>
+        <input type="text" name="quantity" placeholder="Enter Amount or Count">
+      </div>
+      <div class="form-group">
+        <label>REFERENCE #</label>
+        <input type="text" name="reference" placeholder="Ticket or Ticket ID">
+      </div>
+      <div class="form-group">
+        <label>NOTES</label>
+        <textarea name="notes" placeholder="Additional details here..."></textarea>
+      </div>
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
-          <input type="radio" id="yes" name="complete" value="YES" checked><label class="toggle-label" for="yes">YES</label>
-          <input type="radio" id="no" name="complete" value="NO"><label class="toggle-label" for="no">NO</label>
+          <input type="radio" id="yes" name="complete" value="YES" checked>
+          <label class="toggle-label" for="yes">YES</label>
+          <input type="radio" id="no" name="complete" value="NO">
+          <label class="toggle-label" for="no">NO</label>
         </div>
       </div>
       <button type="submit" class="submit-btn">SEND IT IN</button>
     </form>
 
     <footer class="footer">
-      <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+      <p class="footer-tag">Built with StupidSimpleCrazyFast™</p>
       <div class="footer-credits">
         Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>
         Joe Machino • 717.623.2907
@@ -128,23 +206,31 @@
     <div id="infoOverlay" class="ml-info-overlay" hidden></div>
     <div id="infoModal" class="ml-info-modal" hidden>
       <div class="ml-info-modal-inner">
-        <div class="ml-info-header"><h2>App Information</h2><div id="infoCloseBtn" style="cursor:pointer">✕</div></div>
+        <div class="ml-info-header"><h2>App Information</h2><div id="infoCloseBtn" style="cursor:pointer; font-weight:bold;">✕</div></div>
         <div class="ml-info-tabs">
           <button class="ml-info-tab ml-info-tab-active" data-tab="about">About</button>
           <button class="ml-info-tab" data-tab="services">Our Services</button>
           <button class="ml-info-tab" data-tab="faq">FAQ</button>
         </div>
         <div class="ml-info-body">
-          <section class="ml-info-panel" data-panel="about"><p><strong>SEND IT IN</strong> is a neutral data routing engine for field operations. Offline-first and high-speed.</p></section>
-          <section class="ml-info-panel" data-panel="services" hidden><p><strong>MachinoLabs</strong> specializes in SSCF™ micro-apps. Stay tuned for more products!</p></section>
-          <section class="ml-info-panel" data-panel="faq" hidden><p><strong>Security:</strong> Data routes directly to your private Google Sheets. No middle-man tracking.</p></section>
+          <section class="ml-info-panel" data-panel="about">
+            <p><strong>SEND IT IN</strong> is a neutral data routing engine for field operations. It is designed to be high-speed and offline-capable.</p>
+          </section>
+          <section class="ml-info-panel" data-panel="services" hidden>
+            <p><strong>MachinoLabs</strong> specializes in custom micro-apps. We focus on efficiency and simplicity.</p>
+            <p style="margin-top:12px; color:#0d6efd; font-weight:bold;">Stay tuned for more SSCF™ products!</p>
+          </section>
+          <section class="ml-info-panel" data-panel="faq" hidden>
+            <p><strong>Is this secure?</strong><br>Yes. Your data travels directly to your encrypted Google Sheet.</p>
+            <p style="margin-top:12px;"><strong>Contact:</strong><br>Joe Machino • 717.623.2907</p>
+          </section>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // 1. UI LOGIC (Theme & Modal)
+    // 1. UI LOGIC
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       document.body.classList.toggle('light-mode');
@@ -175,7 +261,7 @@
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               const toast = document.createElement('div');
               toast.id = 'update-toast';
-              toast.innerHTML = `<span>New version!</span><button id="upBtn">Update</button>`;
+              toast.innerHTML = `<span>Update Available!</span><button id="upBtn">Reload</button>`;
               document.body.appendChild(toast);
               document.getElementById('upBtn').addEventListener('click', () => newWorker.postMessage({ action: 'skipWaiting' }));
             }
@@ -185,7 +271,7 @@
       navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
     }
 
-    // 3. SUBMISSION LOGIC
+    // 3. SUBMISSION
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
     const form = document.getElementById('submissionForm');
     form.addEventListener('submit', e => {
