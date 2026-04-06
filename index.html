@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
+    /* 1. THEME VARIABLES */
     :root {
       --bg: #0f172a;
       --card: #1e293b;
@@ -17,6 +18,10 @@
       --accent: #0d6efd;
       --success: #198754;
       --tap-orange: #f59e0b;
+      /* Modal Specific */
+      --modal-bg: #f8fafc;
+      --tab-inactive: #e2e8f0;
+      --tab-active: #000000;
     }
 
     body.light-mode {
@@ -31,7 +36,7 @@
     body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; transition: background 0.3s ease; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    /* HEADER */
+    /* 2. HEADER */
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
     .logo-badge { background-color: var(--card); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
@@ -39,47 +44,48 @@
     .nav-controls { display: flex; gap: 20px; align-items: center; }
     .nav-btn { font-size: 24px; cursor: pointer; user-select: none; }
 
-    /* FORM ELEMENTS */
+    /* 3. FORM INPUTS */
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
     input, textarea { width: 100%; background-color: var(--card); border: 2px solid var(--border); border-radius: 10px; color: var(--text-main); padding: 16px; font-size: 16px; -webkit-appearance: none; }
-    input::placeholder, textarea::placeholder { color: var(--border); opacity: 0.8; }
+    input::placeholder, textarea::placeholder { color: var(--border); opacity: 0.9; }
     
     .toggle-group { display: flex; gap: 12px; }
     .toggle-group input { display: none; }
     .toggle-label { flex: 1; text-align: center; background-color: var(--card); padding: 16px; border-radius: 10px; font-weight: 900; cursor: pointer; color: var(--text-muted); border: 2px solid var(--border); }
     .toggle-group input:checked + .toggle-label { background: var(--accent); border-color: var(--accent); color: #ffffff; }
     
-    /* TRAFFIC LIGHT BUTTON */
+    /* 4. TRAFFIC LIGHT BUTTON */
     .submit-btn { width: 100%; background: var(--accent); color: #ffffff; border: none; border-radius: 10px; padding: 20px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s ease; }
     .submit-btn.btn-orange { background: var(--tap-orange) !important; }
     .submit-btn.btn-green { background: var(--success) !important; }
     .submit-btn:disabled { opacity: 0.9; cursor: not-allowed; }
 
-    /* FOOTER */
+    /* 5. FOOTER */
     .footer { text-align: center; margin-top: auto; padding: 40px 0 20px; border-top: 1px solid var(--border); }
     .footer-credits { font-size: 13px; line-height: 1.8; color: var(--text-muted); font-weight: 600; }
 
-    /* MODAL & 2-ROW TABS */
+    /* 6. MODAL & 3-OVER-2 TABS */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; }
     .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .modal[hidden], .overlay[hidden] { display: none; }
-    .modal-inner { background: #f8fafc; color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
+    .modal-inner { background: var(--modal-bg); color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
     
-    .modal-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
-    .modal-tabs .tab-btn:nth-child(4), .modal-tabs .tab-btn:nth-child(5) { grid-column: span 1.5; }
-    /* Custom centering for the bottom 2 tabs */
-    .tab-row-bottom { display: flex; grid-column: span 3; gap: 8px; justify-content: center; }
+    /* Tab Grid Setup */
+    .modal-tabs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .tab-row-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tab-row-bottom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
-    .tab-btn { border-radius: 8px; border: 2px solid #cbd5e1; background: #f1f5f9; padding: 10px 4px; font-size: 11px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; color: #475569; }
-    .tab-btn.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+    .tab-btn { border-radius: 8px; border: none; background: var(--tab-inactive); padding: 12px 4px; font-size: 10px; font-weight: 900; cursor: pointer; text-align: center; text-transform: uppercase; color: #475569; transition: all 0.2s ease; }
+    .tab-btn.active { background: var(--tab-active); color: #ffffff; }
     
-    .panel h3 { font-size: 18px; margin-bottom: 12px; color: #0f172a; border-left: 4px solid #0d6efd; padding-left: 10px; }
+    .panel h3 { font-size: 18px; margin-bottom: 12px; color: #0f172a; border-left: 4px solid #0d6efd; padding-left: 10px; font-weight: 900; }
     .panel p { margin-bottom: 14px; font-size: 14px; line-height: 1.6; }
     .panel strong { color: #0d6efd; font-weight: 800; }
     .panel ul { list-style: none; }
     .panel li { margin-bottom: 15px; font-size: 14px; line-height: 1.4; }
     .panel[hidden] { display: none; }
+    a { color: #0d6efd; text-decoration: none; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -90,11 +96,11 @@
     </div>
 
     <form id="submissionForm">
-      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" placeholder="4-Digit PIN" required></div>
-      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project" required></div>
-      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Hours, Parts, or Gallons"></div>
-      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket, or Invoice #"></div>
-      <div class="form-group"><label>NOTES</label><textarea name="notes" rows="3" placeholder="Provide specific descriptions or list issues..."></textarea></div>
+      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" placeholder="Enter PIN" required></div>
+      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project Title" required></div>
+      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Track Hours, Parts, Gallons, etc."></div>
+      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket ID, or Invoice #"></div>
+      <div class="form-group"><label>NOTES</label><textarea name="notes" rows="3" placeholder="Provide descriptions, list issues, etc."></textarea></div>
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
@@ -116,30 +122,32 @@
     <div id="modal" class="modal" hidden>
       <div class="modal-inner">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <span style="font-weight:900; font-size:12px; color:#64748b; text-transform:uppercase;">Information Center</span>
-          <div id="closeBtn" style="cursor:pointer; font-weight:900; padding:5px;">✕</div>
+          <span style="font-weight:900; font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">System Information</span>
+          <div id="closeBtn" style="cursor:pointer; font-weight:900; padding:5px; font-size:20px;">✕</div>
         </div>
         
         <div class="modal-tabs">
-          <button class="tab-btn active" data-tab="sol">Solution</button>
-          <button class="tab-btn" data-tab="guide">Field Guide</button>
-          <button class="tab-btn" data-tab="tips">Tips</button>
+          <div class="tab-row-top">
+            <button class="tab-btn active" data-tab="sol">The Solution</button>
+            <button class="tab-btn" data-tab="guide">Data Field Guide</button>
+            <button class="tab-btn" data-tab="tips">Tips for Use</button>
+          </div>
           <div class="tab-row-bottom">
-            <button class="tab-btn" data-tab="labs" style="flex:1;">MachinoLabs</button>
-            <button class="tab-btn" data-tab="ctrl" style="flex:1;">Direct Control</button>
+            <button class="tab-btn" data-tab="ctrl">Direct Control</button>
+            <button class="tab-btn" data-tab="labs">MachinoLabs</button>
           </div>
         </div>
         
         <div class="panel" id="panel-sol">
           <h3>Clean Data Direct From The Field</h3>
-          <p>This system removes the friction of mobile reporting while keeping your core data protected.</p>
-          <p><strong>Protected by Design</strong><br>Field workers submit data through a secure form—no access to formulas, structure, or anything that can break.</p>
+          <p>Data is captured at the source and sent directly to your Data Management System, keeping the process fast and secure, without third-party routing.</p>
+          <p><strong>Protection by Design</strong><br>Field workers submit all data through the secured form—no need to access formulas, structure, or anything breakable.</p>
           <p><strong>Works Anywhere</strong><br>Basements, steel buildings, remote sites—entries are captured and sent immediately or once a signal is available.</p>
           <p><strong>No Training Needed</strong></p>
         </div>
 
         <div class="panel" id="panel-guide" hidden>
-          <h3>Field Guide</h3>
+          <h3>Data Field Guide</h3>
           <ul>
             <li><strong>Assignment</strong><br>Job Site, Unit Name, or Project Title.</li>
             <li><strong>Quantity / Value</strong><br>Track Hours, Parts, Gallons, and/or Dollar amounts.</li>
@@ -152,11 +160,18 @@
         <div class="panel" id="panel-tips" hidden>
           <h3>Tips for Use</h3>
           <ul>
-            <li><strong>🎤 Use Your Voice</strong><br>Tap the microphone on your keyboard to dictate entries.</li>
-            <li><strong>🏠 Add to Home Screen</strong><br>Add it to your home screen for one-tap access.</li>
-            <li><strong>☀️ Switch for Sunlight</strong><br>Use the ☀️/🌙 toggle to switch modes. Light mode is easier to see in bright conditions.</li>
-            <li><strong>📶 Send It Anyway</strong><br>No signal? Hit SEND IT IN. The app holds your entry and sends it automatically once you're back online.</li>
+            <li><strong>Voice Dictation</strong><br>🎤 Tap the microphone on your keyboard to dictate entries.</li>
+            <li><strong>Add to Home Screen</strong><br>🏠 Add it to your home screen for one-tap access.</li>
+            <li><strong>Switch for Sunlight</strong><br>☀️ Use the ☀️/🌙 toggle to switch modes. Light mode is easier to see in bright conditions.</li>
+            <li><strong>Send It Anyway</strong><br>📶 No signal? Hit SEND IT IN. The app holds your entry and sends it automatically once you're back online.</li>
           </ul>
+        </div>
+
+        <div class="panel" id="panel-ctrl" hidden>
+          <h3>Direct Control</h3>
+          <p>No middle layers.<br>No third-party tracking.<br>No outside storage.</p>
+          <p>Your data goes straight to your Google Cloud environment.</p>
+          <p><strong>Direct Data Flow</strong></p>
         </div>
 
         <div class="panel" id="panel-labs" hidden>
@@ -165,15 +180,8 @@
           <p>We build simple, fast tools that assist and complement your workflow.</p>
           <p>Paper processes turned into clean, tap-based actions your team <strong>can & will</strong> actually use.</p>
           <p><strong>Simple to Roll Out</strong><br>No complicated setup. No learning curve.</p>
-          <p><strong>Direct Data Flow</strong><br>Data is captured at the source and sent directly to your system, keeping the process fast and secure, without third-party routing.</p>
-        </div>
-
-        <div class="panel" id="panel-ctrl" hidden>
-          <h3>Direct Control</h3>
-          <p>No middle layers.<br>No third-party tracking.<br>No outside storage.</p>
-          <p>Your data goes straight to your Google Cloud environment.</p>
           <p><strong>Built by MachinoLabs</strong></p>
-          <p>🔗 <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>🔗 <a href="https://senditin.app" target="_blank">senditin.app</a><br>🔗 stupidsimplecrazyfast framework</p>
+          <p>🔗 <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>🔗 <a href="https://senditin.app" target="_blank">senditin.app</a><br>🔗 stupidsimplecrazyfast.app framework</p>
           <p><strong>Joe</strong><br>📞 717.623.2907</p>
         </div>
       </div>
@@ -185,7 +193,7 @@
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
-    // THEME & MODAL TAB LOGIC
+    // 1. THEME & MODAL LOGIC
     document.getElementById('themeToggle').addEventListener('click', (e) => {
       document.body.classList.toggle('light-mode');
       e.target.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
@@ -206,7 +214,7 @@
       });
     });
 
-    // SUBMISSION LOGIC (The Traffic Light)
+    // 2. SUBMISSION LOGIC (The Traffic Light)
     form.addEventListener('submit', e => {
       e.preventDefault();
       
@@ -241,7 +249,7 @@
       }, 500);
     });
 
-    // SERVICE WORKER V10
+    // 3. SERVICE WORKER V11 AUTO-UPDATE
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
