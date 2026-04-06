@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* 1. THEME VARIABLES */
     :root {
       --bg: #0f172a;
       --card: #1e293b;
@@ -18,7 +17,6 @@
       --accent: #0d6efd;
       --success: #198754;
       --tap-orange: #f59e0b;
-      /* Modal Specific */
       --modal-bg: #f8fafc;
       --tab-inactive: #e2e8f0;
       --tab-active: #000000;
@@ -36,15 +34,20 @@
     body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; transition: background 0.3s ease; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    /* 2. HEADER */
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
+    /* HEADER */
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
     .logo-badge { background-color: var(--card); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
     .logo-blue { color: var(--accent); }
     .nav-controls { display: flex; gap: 20px; align-items: center; }
     .nav-btn { font-size: 24px; cursor: pointer; user-select: none; }
 
-    /* 3. FORM INPUTS */
+    /* COMMAND STATEMENT */
+    .notice-plate { text-align: center; margin-bottom: 25px; padding: 0 10px; }
+    .notice-plate h2 { font-size: 14px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 6px; }
+    .notice-plate p { font-size: 13px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
+
+    /* FORM INPUTS */
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
     input, textarea { width: 100%; background-color: var(--card); border: 2px solid var(--border); border-radius: 10px; color: var(--text-main); padding: 16px; font-size: 16px; -webkit-appearance: none; }
@@ -55,23 +58,22 @@
     .toggle-label { flex: 1; text-align: center; background-color: var(--card); padding: 16px; border-radius: 10px; font-weight: 900; cursor: pointer; color: var(--text-muted); border: 2px solid var(--border); }
     .toggle-group input:checked + .toggle-label { background: var(--accent); border-color: var(--accent); color: #ffffff; }
     
-    /* 4. TRAFFIC LIGHT BUTTON */
+    /* TRAFFIC LIGHT BUTTON */
     .submit-btn { width: 100%; background: var(--accent); color: #ffffff; border: none; border-radius: 10px; padding: 20px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s ease; }
     .submit-btn.btn-orange { background: var(--tap-orange) !important; }
     .submit-btn.btn-green { background: var(--success) !important; }
     .submit-btn:disabled { opacity: 0.9; cursor: not-allowed; }
 
-    /* 5. FOOTER */
+    /* FOOTER */
     .footer { text-align: center; margin-top: auto; padding: 40px 0 20px; border-top: 1px solid var(--border); }
     .footer-credits { font-size: 13px; line-height: 1.8; color: var(--text-muted); font-weight: 600; }
 
-    /* 6. MODAL & 3-OVER-2 TABS */
+    /* MODAL & TABS */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; }
     .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .modal[hidden], .overlay[hidden] { display: none; }
     .modal-inner { background: var(--modal-bg); color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
     
-    /* Tab Grid Setup */
     .modal-tabs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
     .tab-row-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .tab-row-bottom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -93,6 +95,11 @@
     <div class="header">
       <div class="logo-badge"><div class="logo">SEND<span class="logo-blue">IT</span>IN</div></div>
       <div class="nav-controls"><div class="nav-btn" id="infoBtn">ⓘ</div><div class="nav-btn" id="themeToggle">☀️</div></div>
+    </div>
+
+    <div class="notice-plate">
+      <h2>IMPORTANT</h2>
+      <p>Form must be completed in full. All information must be 100% accurate to the action taken.</p>
     </div>
 
     <form id="submissionForm">
@@ -193,7 +200,6 @@
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
-    // 1. THEME & MODAL LOGIC
     document.getElementById('themeToggle').addEventListener('click', (e) => {
       document.body.classList.toggle('light-mode');
       e.target.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
@@ -214,28 +220,21 @@
       });
     });
 
-    // 2. SUBMISSION LOGIC (The Traffic Light)
     form.addEventListener('submit', e => {
       e.preventDefault();
-      
-      // Stage 1: Orange Flash (0.5s)
       btn.classList.add('btn-orange');
       btn.disabled = true;
       
       setTimeout(() => {
-        // Stage 2: Blue "Sending"
         btn.classList.remove('btn-orange');
         btn.innerText = 'SENDING...';
         
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
           .then(response => {
-            // Stage 3: Green "Sent" (3s)
             btn.classList.add('btn-green');
             btn.innerText = 'SENT! 👍';
             form.reset();
-            
             setTimeout(() => {
-              // Stage 4: Reset to Blue Standby
               btn.classList.remove('btn-green');
               btn.innerText = 'SEND IT IN';
               btn.disabled = false;
@@ -249,7 +248,6 @@
       }, 500);
     });
 
-    // 3. SERVICE WORKER V11 AUTO-UPDATE
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
