@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
-    /* 1. THEME & GLOBAL STYLES */
     :root {
       --bg: #0f172a;
       --card: #1e293b;
@@ -32,7 +31,7 @@
     body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; transition: background 0.3s ease; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    /* 2. HEADER */
+    /* HEADER */
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
     .logo-badge { background-color: var(--card); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
@@ -40,45 +39,47 @@
     .nav-controls { display: flex; gap: 20px; align-items: center; }
     .nav-btn { font-size: 24px; cursor: pointer; user-select: none; }
 
-    /* 3. FORM */
+    /* FORM ELEMENTS */
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
     input, textarea { width: 100%; background-color: var(--card); border: 2px solid var(--border); border-radius: 10px; color: var(--text-main); padding: 16px; font-size: 16px; -webkit-appearance: none; }
+    input::placeholder, textarea::placeholder { color: var(--border); opacity: 0.8; }
     
     .toggle-group { display: flex; gap: 12px; }
     .toggle-group input { display: none; }
     .toggle-label { flex: 1; text-align: center; background-color: var(--card); padding: 16px; border-radius: 10px; font-weight: 900; cursor: pointer; color: var(--text-muted); border: 2px solid var(--border); }
     .toggle-group input:checked + .toggle-label { background: var(--accent); border-color: var(--accent); color: #ffffff; }
     
-    /* 4. BUTTON STATES (The Traffic Light) */
+    /* TRAFFIC LIGHT BUTTON */
     .submit-btn { width: 100%; background: var(--accent); color: #ffffff; border: none; border-radius: 10px; padding: 20px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s ease; }
     .submit-btn.btn-orange { background: var(--tap-orange) !important; }
     .submit-btn.btn-green { background: var(--success) !important; }
     .submit-btn:disabled { opacity: 0.9; cursor: not-allowed; }
 
-    /* 5. FOOTER */
+    /* FOOTER */
     .footer { text-align: center; margin-top: auto; padding: 40px 0 20px; border-top: 1px solid var(--border); }
     .footer-credits { font-size: 13px; line-height: 1.8; color: var(--text-muted); font-weight: 600; }
 
-    /* 6. MODAL STYLES */
+    /* MODAL & 2-ROW TABS */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; }
     .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .modal[hidden], .overlay[hidden] { display: none; }
-    .modal-inner { background: #f8fafc; color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
-    .modal-tabs { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-    .tab-btn { border-radius: 30px; border: 2px solid #cbd5e1; background: #f1f5f9; padding: 8px 16px; font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; }
-    .tab-btn.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
-    .panel p { margin-bottom: 12px; font-size: 14px; line-height: 1.5; }
-    .panel h3 { font-size: 16px; margin-bottom: 8px; color: #0f172a; }
-    .panel strong { color: #0d6efd; }
-    .panel ul { list-style: none; margin-bottom: 15px; }
-    .panel li { margin-bottom: 10px; font-size: 14px; }
-    .panel[hidden] { display: none; }
+    .modal-inner { background: #f8fafc; color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
+    
+    .modal-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+    .modal-tabs .tab-btn:nth-child(4), .modal-tabs .tab-btn:nth-child(5) { grid-column: span 1.5; }
+    /* Custom centering for the bottom 2 tabs */
+    .tab-row-bottom { display: flex; grid-column: span 3; gap: 8px; justify-content: center; }
 
-    /* UPDATE TOAST */
-    #update-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 14px 24px; border-radius: 50px; z-index: 10000; font-weight: 800; display: flex; gap: 15px; align-items: center; }
-    #update-toast button { background: white; color: var(--accent); border: none; padding: 6px 12px; border-radius: 20px; font-weight: 900; cursor: pointer; }
+    .tab-btn { border-radius: 8px; border: 2px solid #cbd5e1; background: #f1f5f9; padding: 10px 4px; font-size: 11px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; color: #475569; }
+    .tab-btn.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+    
+    .panel h3 { font-size: 18px; margin-bottom: 12px; color: #0f172a; border-left: 4px solid #0d6efd; padding-left: 10px; }
+    .panel p { margin-bottom: 14px; font-size: 14px; line-height: 1.6; }
+    .panel strong { color: #0d6efd; font-weight: 800; }
+    .panel ul { list-style: none; }
+    .panel li { margin-bottom: 15px; font-size: 14px; line-height: 1.4; }
+    .panel[hidden] { display: none; }
   </style>
 </head>
 <body>
@@ -89,11 +90,11 @@
     </div>
 
     <form id="submissionForm">
-      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" required></div>
-      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" required></div>
-      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity"></div>
-      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference"></div>
-      <div class="form-group"><label>NOTES</label><textarea name="notes" rows="3"></textarea></div>
+      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" placeholder="4-Digit PIN" required></div>
+      <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project" required></div>
+      <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Hours, Parts, or Gallons"></div>
+      <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket, or Invoice #"></div>
+      <div class="form-group"><label>NOTES</label><textarea name="notes" rows="3" placeholder="Provide specific descriptions or list issues..."></textarea></div>
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
@@ -114,54 +115,65 @@
     <div id="overlay" class="overlay" hidden></div>
     <div id="modal" class="modal" hidden>
       <div class="modal-inner">
-        <div class="modal-header"><h3>Info Modal</h3><div id="closeBtn" style="cursor:pointer; font-weight:900;">✕</div></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <span style="font-weight:900; font-size:12px; color:#64748b; text-transform:uppercase;">Information Center</span>
+          <div id="closeBtn" style="cursor:pointer; font-weight:900; padding:5px;">✕</div>
+        </div>
+        
         <div class="modal-tabs">
-          <button class="tab-btn active" data-tab="sol">The Solution</button>
-          <button class="tab-btn" data-tab="tips">Tips for Use</button>
-          <button class="tab-btn" data-tab="labs">MachinoLabs</button>
-          <button class="tab-btn" data-tab="con">Contact</button>
+          <button class="tab-btn active" data-tab="sol">Solution</button>
+          <button class="tab-btn" data-tab="guide">Field Guide</button>
+          <button class="tab-btn" data-tab="tips">Tips</button>
+          <div class="tab-row-bottom">
+            <button class="tab-btn" data-tab="labs" style="flex:1;">MachinoLabs</button>
+            <button class="tab-btn" data-tab="ctrl" style="flex:1;">Direct Control</button>
+          </div>
         </div>
         
         <div class="panel" id="panel-sol">
-          <h3>Clean Data from the Field</h3>
+          <h3>Clean Data Direct From The Field</h3>
           <p>This system removes the friction of mobile reporting while keeping your core data protected.</p>
-          <p><strong>Protected by Design</strong></p>
-          <p>Field workers submit data through a secure form—no access to formulas, structure, or anything they can break.</p>
-          <p><strong>Works Anywhere</strong></p>
-          <p>Basements, steel buildings, remote sites—entries are captured and sent when a signal is available.</p>
+          <p><strong>Protected by Design</strong><br>Field workers submit data through a secure form—no access to formulas, structure, or anything that can break.</p>
+          <p><strong>Works Anywhere</strong><br>Basements, steel buildings, remote sites—entries are captured and sent immediately or once a signal is available.</p>
           <p><strong>No Training Needed</strong></p>
-          <p>If someone can send a text, they can use this.</p>
+        </div>
+
+        <div class="panel" id="panel-guide" hidden>
+          <h3>Field Guide</h3>
+          <ul>
+            <li><strong>Assignment</strong><br>Job Site, Unit Name, or Project Title.</li>
+            <li><strong>Quantity / Value</strong><br>Track Hours, Parts, Gallons, and/or Dollar amounts.</li>
+            <li><strong>Reference #</strong><br>Link Entry to a specific PO, Ticket ID, or Invoice Number.</li>
+            <li><strong>Notes</strong><br>Provide specific descriptions, list issues, and/or dictate a summary of action performed.</li>
+            <li><strong>Task Complete?</strong><br>Toggle YES to close the job - NO if follow-up is needed.</li>
+          </ul>
         </div>
 
         <div class="panel" id="panel-tips" hidden>
-          <h3>Quick Wins for Faster Input</h3>
+          <h3>Tips for Use</h3>
           <ul>
-            <li><strong>🎤 Use Your Voice</strong><br>Tap the microphone on your keyboard to dictate notes instead of typing—especially useful with gloves or dirty hands.</li>
-            <li><strong>🏠 Add to Home Screen</strong><br>Add it to your home screen for one-tap access, just like an app.</li>
+            <li><strong>🎤 Use Your Voice</strong><br>Tap the microphone on your keyboard to dictate entries.</li>
+            <li><strong>🏠 Add to Home Screen</strong><br>Add it to your home screen for one-tap access.</li>
             <li><strong>☀️ Switch for Sunlight</strong><br>Use the ☀️/🌙 toggle to switch modes. Light mode is easier to see in bright conditions.</li>
             <li><strong>📶 Send It Anyway</strong><br>No signal? Hit SEND IT IN. The app holds your entry and sends it automatically once you're back online.</li>
           </ul>
         </div>
 
         <div class="panel" id="panel-labs" hidden>
-          <h3>Less Admin. More Doing.</h3>
-          <p><strong>No claims</strong></p>
-          <p>We build simple, fast tools for businesses that don’t want to fight their software.</p>
-          <p><strong>Built Around Your Workflow</strong></p>
-          <p>Paper processes turned into clean, tap-based actions your team can actually use.</p>
-          <p><strong>Simple to Roll Out</strong></p>
-          <p>No complicated setup. No long learning curve.</p>
-          <p><strong>Direct Data Flow</strong></p>
-          <p>Data is captured at the source and sent directly to your system—keeping the process fast and secure, without third-party routing.</p>
+          <h3>MachinoLabs</h3>
+          <p><strong>Less Admin. More Doing.</strong></p>
+          <p>We build simple, fast tools that assist and complement your workflow.</p>
+          <p>Paper processes turned into clean, tap-based actions your team <strong>can & will</strong> actually use.</p>
+          <p><strong>Simple to Roll Out</strong><br>No complicated setup. No learning curve.</p>
+          <p><strong>Direct Data Flow</strong><br>Data is captured at the source and sent directly to your system, keeping the process fast and secure, without third-party routing.</p>
         </div>
 
-        <div class="panel" id="panel-con" hidden>
-          <h3>Direct Support</h3>
+        <div class="panel" id="panel-ctrl" hidden>
+          <h3>Direct Control</h3>
           <p>No middle layers.<br>No third-party tracking.<br>No outside storage.</p>
           <p>Your data goes straight to your Google Cloud environment.</p>
           <p><strong>Built by MachinoLabs</strong></p>
-          <p><a href="https://machinolabs.com" target="_blank">machinolabs.com</a></p>
-          <p><a href="https://stupidsimplecrazyfast.com" target="_blank">stupidsimplecrazyfast.com</a></p>
+          <p>🔗 <a href="https://machinolabs.com" target="_blank">machinolabs.com</a><br>🔗 <a href="https://senditin.app" target="_blank">senditin.app</a><br>🔗 stupidsimplecrazyfast framework</p>
           <p><strong>Joe</strong><br>📞 717.623.2907</p>
         </div>
       </div>
@@ -169,17 +181,20 @@
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxOPI_3MGYK8scF11HdjZQy67fvOI0dQnZnzwQ6xx_UOturhPFDT3EvD0hyLDGw_lOJ_w/exec';
+    const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
-    // 1. THEME & MODAL LOGIC
+    // THEME & MODAL TAB LOGIC
     document.getElementById('themeToggle').addEventListener('click', (e) => {
       document.body.classList.toggle('light-mode');
       e.target.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     });
 
-    const toggleModal = () => { document.getElementById('modal').hidden = !document.getElementById('modal').hidden; document.getElementById('overlay').hidden = !document.getElementById('overlay').hidden; };
+    const toggleModal = () => { 
+      document.getElementById('modal').hidden = !document.getElementById('modal').hidden; 
+      document.getElementById('overlay').hidden = !document.getElementById('overlay').hidden; 
+    };
     [document.getElementById('infoBtn'), document.getElementById('closeBtn'), document.getElementById('overlay')].forEach(el => el.addEventListener('click', toggleModal));
 
     document.querySelectorAll('.tab-btn').forEach(tab => {
@@ -191,7 +206,7 @@
       });
     });
 
-    // 2. SUBMISSION & BUTTON COLORS (The Traffic Light)
+    // SUBMISSION LOGIC (The Traffic Light)
     form.addEventListener('submit', e => {
       e.preventDefault();
       
@@ -212,7 +227,7 @@
             form.reset();
             
             setTimeout(() => {
-              // Stage 4: Reset to Blue
+              // Stage 4: Reset to Blue Standby
               btn.classList.remove('btn-green');
               btn.innerText = 'SEND IT IN';
               btn.disabled = false;
@@ -226,23 +241,18 @@
       }, 500);
     });
 
-    // 3. SERVICE WORKER / AUTO-UPDATE
+    // SERVICE WORKER V10
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
           const newWorker = reg.installing;
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              const toast = document.createElement('div');
-              toast.id = 'update-toast';
-              toast.innerHTML = `<span>Update Ready!</span><button id="upBtn">Reload</button>`;
-              document.body.appendChild(toast);
-              document.getElementById('upBtn').onclick = () => newWorker.postMessage({ action: 'skipWaiting' });
+              window.location.reload();
             }
           });
         });
       });
-      navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
     }
   </script>
 </body>
