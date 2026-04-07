@@ -34,7 +34,6 @@
     body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; transition: background 0.3s ease; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
     
-    /* HEADER */
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
     .logo-badge { background-color: var(--card); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
@@ -42,12 +41,10 @@
     .nav-controls { display: flex; gap: 20px; align-items: center; }
     .nav-btn { font-size: 24px; cursor: pointer; user-select: none; }
 
-    /* COMMAND STATEMENT */
     .notice-plate { text-align: center; margin-bottom: 25px; padding: 0 10px; }
     .notice-plate h2 { font-size: 14px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 6px; }
     .notice-plate p { font-size: 13px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
 
-    /* FORM INPUTS */
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
     input, textarea { width: 100%; background-color: var(--card); border: 2px solid var(--border); border-radius: 10px; color: var(--text-main); padding: 16px; font-size: 16px; -webkit-appearance: none; }
@@ -58,17 +55,14 @@
     .toggle-label { flex: 1; text-align: center; background-color: var(--card); padding: 16px; border-radius: 10px; font-weight: 900; cursor: pointer; color: var(--text-muted); border: 2px solid var(--border); }
     .toggle-group input:checked + .toggle-label { background: var(--accent); border-color: var(--accent); color: #ffffff; }
     
-    /* TRAFFIC LIGHT BUTTON */
     .submit-btn { width: 100%; background: var(--accent); color: #ffffff; border: none; border-radius: 10px; padding: 20px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s ease; }
     .submit-btn.btn-orange { background: var(--tap-orange) !important; }
     .submit-btn.btn-green { background: var(--success) !important; }
     .submit-btn:disabled { opacity: 0.9; cursor: not-allowed; }
 
-    /* FOOTER */
     .footer { text-align: center; margin-top: auto; padding: 40px 0 20px; border-top: 1px solid var(--border); }
     .footer-credits { font-size: 13px; line-height: 1.8; color: var(--text-muted); font-weight: 600; }
 
-    /* MODAL & TABS */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; }
     .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .modal[hidden], .overlay[hidden] { display: none; }
@@ -104,11 +98,14 @@
 
     <form id="submissionForm">
       <input type="hidden" name="secretKey" value="MACHINO_V12_SECURE">
-      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="pin" placeholder="Enter PIN" required></div>
+      
+      <div class="form-group"><label>PIN NUMBER</label><input type="number" name="workerID" placeholder="Enter PIN" required></div>
+      
       <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project Title" required></div>
       <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Track Hours, Parts, Gallons, etc."></div>
       <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket ID, or Invoice #"></div>
       <div class="form-group"><label>NOTES</label><textarea name="notes" rows="3" placeholder="Provide descriptions, list issues, etc."></textarea></div>
+      
       <div class="form-group">
         <label>TASK COMPLETE?</label>
         <div class="toggle-group">
@@ -133,7 +130,6 @@
           <span style="font-weight:900; font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">System Information</span>
           <div id="closeBtn" style="cursor:pointer; font-weight:900; padding:5px; font-size:20px;">✕</div>
         </div>
-        
         <div class="modal-tabs">
           <div class="tab-row-top">
             <button class="tab-btn active" data-tab="sol">The Solution</button>
@@ -145,7 +141,6 @@
             <button class="tab-btn" data-tab="labs">MachinoLabs</button>
           </div>
         </div>
-        
         <div class="panel" id="panel-sol">
           <h3>Clean Data Direct From The Field</h3>
           <p>Data is captured at the source and sent directly to your Data Management System, keeping the process fast and secure, without third-party routing.</p>
@@ -153,7 +148,6 @@
           <p><strong>Works Anywhere</strong><br>Basements, steel buildings, remote sites—entries are captured and sent immediately or once a signal is available.</p>
           <p><strong>No Training Needed</strong></p>
         </div>
-
         <div class="panel" id="panel-guide" hidden>
           <h3>Data Field Guide</h3>
           <ul>
@@ -164,7 +158,6 @@
             <li><strong>Task Complete?</strong><br>Toggle YES to close the job - NO if follow-up is needed.</li>
           </ul>
         </div>
-
         <div class="panel" id="panel-tips" hidden>
           <h3>Tips for Use</h3>
           <ul>
@@ -174,14 +167,12 @@
             <li><strong>Send It Anyway</strong><br>📶 No signal? Hit SEND IT IN. The app holds your entry and sends it automatically once you're back online.</li>
           </ul>
         </div>
-
         <div class="panel" id="panel-ctrl" hidden>
           <h3>Direct Control</h3>
           <p>No middle layers.<br>No third-party tracking.<br>No outside storage.</p>
           <p>Your data goes straight to your Google Cloud environment.</p>
           <p><strong>Direct Data Flow</strong></p>
         </div>
-
         <div class="panel" id="panel-labs" hidden>
           <h3>MachinoLabs</h3>
           <p><strong>Less Admin. More Doing.</strong></p>
@@ -197,7 +188,8 @@
   </div>
 
   <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwSqaxBIUdUgVwdTsJ0Pjwu4kXBisxxCF9eX3MgH_Ch_h4wXyYl-n75ky8UynRiOr2g0Q/exec';
+    // FIXED: Updated to Version 5 Gold URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwSqaxBIUdUgVwdTsJ0Pjwu4kXBisxxCF9eX3MgH_Ch_h4wXyYl-n75ky8UynRiOr2g0Q/exec';
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
