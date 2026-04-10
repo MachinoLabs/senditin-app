@@ -191,7 +191,7 @@
   </div>
 
   <script>
-    // FIXED: Latest V4 URL from Google
+    // GOOGLE APPS SCRIPT V6 URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwkr0kwmkhID1OF7nLdZKBkB7mZcZhV44mgWpy9Qib1fUzrMSu_C5gUsCvckqRTwO54/exec';
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
@@ -215,18 +215,24 @@
       });
     });
 
-    // SUBMISSION LOGIC (The "Teleport" Engine)
+    // REWRITTEN SUBMISSION LOGIC (The "Safe-Pass" Mode)
     form.addEventListener('submit', e => {
       e.preventDefault();
       btn.disabled = true;
       btn.innerText = 'SENDING...';
       btn.classList.add('btn-orange');
 
-      fetch(scriptURL, { 
-        method: 'POST', 
-        body: new FormData(form)
+      // Convert form data to a URL query string (Highest compatibility for browsers/iPhones)
+      const params = new URLSearchParams(new FormData(form)).toString();
+      const finalURL = scriptURL + "?" + params;
+
+      // Use a GET request with 'no-cors' to bypass strict browser/extension security blocks
+      fetch(finalURL, { 
+        method: 'GET',
+        mode: 'no-cors' 
       })
-      .then(response => {
+      .then(() => {
+        // Since 'no-cors' doesn't return readable data, we assume success if the fetch finishes
         btn.classList.replace('btn-orange', 'btn-green');
         btn.innerText = 'SENT! 👍';
         form.reset();
@@ -237,11 +243,11 @@
         }, 3000);
       })
       .catch(error => {
-        console.error('Error!', error.message);
+        console.error('Error!', error);
         btn.classList.remove('btn-orange');
         btn.innerText = 'RETRY';
         btn.disabled = false;
-        alert("Check AdBlockers or connection signal.");
+        alert("SYSTEM ALERT: " + error.message);
       });
     });
 
