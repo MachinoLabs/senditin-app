@@ -100,10 +100,19 @@
       <input type="hidden" name="secretKey" value="MACHINO_V12_SECURE">
       
       <div class="form-group">
-        <label>PIN NUMBER</label>
-        <input type="text" name="workerID" placeholder="Enter PIN (e.g. 777-Name)" required>
+        <label>Company ID</label>
+        <input type="text" name="companyID" placeholder="e.g. MAC" required>
       </div>
-      
+
+      <div class="form-group">
+        <label>Secret PIN</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" name="secretPIN" placeholder="6-Digit PIN" required>
+      </div>
+
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="workerName" placeholder="Worker Name" required>
+      </div>
       <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project Title" required></div>
       <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Track Hours, Parts, Gallons, etc."></div>
       <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket ID, or Invoice #"></div>
@@ -191,12 +200,10 @@
   </div>
 
   <script>
-    // GOOGLE APPS SCRIPT V6 URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwRU_P7C4GZ9eLmoHGA5q2xjdVYg4N79LAEAP3v5BK1jPPtYxoV_cbQkc-s1Hz5uCy3/exec';
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
-    // UI LOGIC (Theme Toggle, Modals, Tabs)
     document.getElementById('themeToggle').addEventListener('click', (e) => {
       document.body.classList.toggle('light-mode');
       e.target.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
@@ -215,24 +222,20 @@
       });
     });
 
-    // REWRITTEN SUBMISSION LOGIC (The "Safe-Pass" Mode)
     form.addEventListener('submit', e => {
       e.preventDefault();
       btn.disabled = true;
       btn.innerText = 'SENDING...';
       btn.classList.add('btn-orange');
 
-      // Convert form data to a URL query string (Highest compatibility for browsers/iPhones)
       const params = new URLSearchParams(new FormData(form)).toString();
       const finalURL = scriptURL + "?" + params;
 
-      // Use a GET request with 'no-cors' to bypass strict browser/extension security blocks
       fetch(finalURL, { 
         method: 'GET',
         mode: 'no-cors' 
       })
       .then(() => {
-        // Since 'no-cors' doesn't return readable data, we assume success if the fetch finishes
         btn.classList.replace('btn-orange', 'btn-green');
         btn.innerText = 'SENT! 👍';
         form.reset();
@@ -251,7 +254,6 @@
       });
     });
 
-    // SERVICE WORKER LOGIC
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
