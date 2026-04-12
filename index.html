@@ -98,6 +98,8 @@
 
     <form id="submissionForm">
       <input type="hidden" name="secretKey" value="MACHINO_V12_SECURE">
+      <input type="hidden" id="lat" name="lat">
+      <input type="hidden" id="long" name="long">
       
       <div class="form-group">
         <label>Company ID</label>
@@ -110,9 +112,10 @@
       </div>
 
       <div class="form-group">
-        <label>Your Name</label>
+        <label>REPORT BY</label>
         <input type="text" name="workerName" placeholder="Worker Name" required>
       </div>
+
       <div class="form-group"><label>ASSIGNMENT</label><input type="text" name="assignment" placeholder="Job Site, Unit Name, or Project Title" required></div>
       <div class="form-group"><label>QUANTITY / VALUE</label><input type="text" name="quantity" placeholder="Track Hours, Parts, Gallons, etc."></div>
       <div class="form-group"><label>REFERENCE #</label><input type="text" name="reference" placeholder="PO, Ticket ID, or Invoice #"></div>
@@ -200,10 +203,12 @@
   </div>
 
   <script>
+    // THE TRAFFIC COP URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwRU_P7C4GZ9eLmoHGA5q2xjdVYg4N79LAEAP3v5BK1jPPtYxoV_cbQkc-s1Hz5uCy3/exec';
     const form = document.getElementById('submissionForm');
     const btn = document.getElementById('submitBtn');
 
+    // UI LOGIC
     document.getElementById('themeToggle').addEventListener('click', (e) => {
       document.body.classList.toggle('light-mode');
       e.target.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
@@ -222,6 +227,20 @@
       });
     });
 
+    // GEOLOCATION ENGINE
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          document.getElementById('lat').value = pos.coords.latitude;
+          document.getElementById('long').value = pos.coords.longitude;
+        }, (err) => {
+          console.warn("Location access denied.");
+        }, { enableHighAccuracy: true });
+      }
+    }
+    window.onload = getLocation; // Pre-grab location on load
+
+    // SUBMISSION LOGIC
     form.addEventListener('submit', e => {
       e.preventDefault();
       btn.disabled = true;
@@ -239,6 +258,7 @@
         btn.classList.replace('btn-orange', 'btn-green');
         btn.innerText = 'SENT! 👍';
         form.reset();
+        getLocation(); // Re-grab location for next possible entry
         setTimeout(() => {
           btn.classList.remove('btn-green');
           btn.innerText = 'SEND IT IN';
@@ -254,6 +274,7 @@
       });
     });
 
+    // PWA LOGIC
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
