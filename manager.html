@@ -61,16 +61,19 @@
   </div>
 
   <script>
+    // --- TESTING CONFIG: CHANGE THESE ---
+    const TEST_CO_ID = 'GRV';  
+    const TEST_PIN = '300045'; 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbz6Yib3syCndpJWdsstlFG4UGzsWEuOSyuX5TpmfiEaACDuUhBkM2aa3Gbmb8aNIvrM/exec';
-    let auth = { co: '', pin: '' };
+    
     let currentData = [];
+    let headers = [];
 
-    function doLogin() {
-      auth.co = document.getElementById('coID').value.toUpperCase();
-      auth.pin = document.getElementById('pin').value;
-      loadDashboard();
-      loadConfig();
-    }
+    // Auto-load on page start (Skipping login screen)
+    window.onload = () => {
+        loadDashboard();
+        loadConfig();
+    };
 
     async function loadDashboard() {
       const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=read&companyID=${auth.co}&secretPIN=${auth.pin}`;
