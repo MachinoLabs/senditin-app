@@ -3,130 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MANAGER | SEND IT IN</title>
+  <title>MANAGER DEBUG | SEND IT IN</title>
   <style>
-    :root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #ffffff; --accent: #0d6efd; --success: #198754; }
+    :root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #ffffff; --accent: #0d6efd; --success: #198754; --muted: #94a3b8; }
     * { box-sizing: border-box; margin: 0; font-family: sans-serif; }
     body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
     
-    /* LOGIN */
-    .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; }
-    .login-box { background: var(--card); padding: 40px; border-radius: 12px; border: 2px solid var(--border); width: 340px; text-align: center; }
-    input { width: 100%; padding: 15px; margin: 10px 0; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 8px; text-transform: uppercase; }
-
-    /* LAYOUT */
-    header { padding: 15px 20px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    header { padding: 15px 20px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #020617; }
     .main { display: flex; flex: 1; overflow: hidden; }
+    
     #feed { width: 350px; border-right: 2px solid var(--border); overflow-y: auto; padding: 15px; }
     #center { flex: 1; padding: 40px; overflow-y: auto; }
-    #right-strip { width: 280px; border-left: 2px solid var(--border); padding: 20px; overflow-y: auto; background: rgba(0,0,0,0.2); }
+    #right-strip { width: 300px; border-left: 2px solid var(--border); padding: 20px; background: var(--card); }
 
-    /* CARDS & TOGGLES */
-    .card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+    .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; }
     .card:hover { border-color: var(--accent); }
-    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; font-weight: 700; }
-    .btn { width: 100%; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: 900; }
-    .btn-blue { background: var(--accent); color: white; }
-    .btn-green { background: var(--success); color: white; }
+    
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-top: 25px; }
+    .detail-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+    
+    .toggle-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 12px; background: var(--bg); border-radius: 8px; font-size: 13px; }
+    
+    .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; text-decoration: none; font-size: 12px; display: inline-block; }
+    .btn-sheet { background: #198754; color: white; margin-left: 10px; }
+    .btn-save { background: var(--accent); color: white; width: 100%; margin-top: 20px; }
   </style>
 </head>
 <body>
 
-  <div id="login" class="overlay">
-    <div class="login-box">
-      <h2 style="margin-bottom:20px;">SEND IT IN</h2>
-      <input type="text" id="coID" placeholder="Company ID">
-      <input type="password" id="pin" placeholder="Master PIN">
-      <button class="btn btn-blue" onclick="doLogin()">LOGIN</button>
-    </div>
-  </div>
-
   <header>
-    <div style="font-weight:900;">SEND<span style="color:var(--accent)">IT</span>IN MANAGER</div>
-    <div id="sync">● SYNCING</div>
+    <div style="font-weight:900; font-size:18px;">SEND<span style="color:var(--accent)">IT</span>IN <span style="font-weight:400; font-size:11px; color:var(--muted)">| DEBUG</span></div>
+    <div>
+        <span id="syncStatus" style="color:var(--success); font-size:11px; font-weight:800; margin-right:15px;">● LIVE FEED</span>
+        <a id="sheetLink" href="#" target="_blank" class="btn btn-sheet" style="display:none;">View Google Sheet</a>
+    </div>
   </header>
 
   <div class="main">
     <div id="feed"></div>
     <div id="center">
-      <div id="detail">
-        <h3 style="color:var(--border)">Select a field report to view details</h3>
+      <div id="detailView">
+          <h2 style="color:var(--border); text-align:center; margin-top:100px;">Select a field report to view grid.</h2>
       </div>
     </div>
     <div id="right-strip">
-      <h4 style="margin-bottom:20px; font-size:12px; color:var(--accent)">FIELD APP SETTINGS</h4>
-      <div id="toggle-list"></div>
-      <button class="btn btn-green" style="margin-top:20px;" onclick="saveFields()">UPDATE APP</button>
+      <h4 style="margin-bottom:15px; color:var(--accent); font-size:11px; letter-spacing:1px;">WORKER APP CONFIG</h4>
+      <div id="toggleList"></div>
+      <button class="btn btn-save" onclick="saveConfig()">Save Settings</button>
     </div>
   </div>
 
   <script>
-    // --- TESTING CONFIG: CHANGE THESE ---
-    const TEST_CO_ID = 'GRV';  
-    const TEST_PIN = '300045'; 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz6Yib3syCndpJWdsstlFG4UGzsWEuOSyuX5TpmfiEaACDuUhBkM2aa3Gbmb8aNIvrM/exec';
+    const DEBUG_CO = 'GRV';
+    const DEBUG_PIN = '300045';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyFZwplURJ83xMJA3iV2T6gM3_ipM_Evl4N_17DyOHrZla21EWig_xrAbDVTBNQwH3C/exec';
     
-    let currentData = [];
     let headers = [];
+    let entries = [];
 
-    // Auto-load on page start (Skipping login screen)
-    window.onload = () => {
-        loadDashboard();
-        loadConfig();
-    };
+    window.onload = () => { loadDashboard(); loadConfig(); };
 
     async function loadDashboard() {
-      const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=read&companyID=${auth.co}&secretPIN=${auth.pin}`;
-      try {
+        const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=read&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}`;
         const res = await fetch(url);
         const data = await res.json();
-        if(data.error) return alert("Login Failed");
-        document.getElementById('login').style.display = 'none';
+        
+        headers = data.headers;
+        entries = data.entries;
+        
+        // Show and populate the Google Sheet link
+        if(data.sheetId) {
+            const link = document.getElementById('sheetLink');
+            link.href = `https://docs.google.com/spreadsheets/d/${data.sheetId}/edit`;
+            link.style.display = 'inline-block';
+        }
+
         renderFeed(data.entries);
-      } catch(e) { console.error(e); }
     }
 
-    function renderFeed(entries) {
-      currentData = entries;
-      const f = document.getElementById('feed');
-      f.innerHTML = '';
-      entries.forEach((row, i) => {
-        const c = document.createElement('div');
-        c.className = 'card';
-        c.onclick = () => showDetail(i);
-        c.innerHTML = `<div style="font-weight:900; color:var(--accent)">#${row[3]}</div><div>${row[5]}</div>`;
-        f.appendChild(c);
-      });
+    function renderFeed(data) {
+        const f = document.getElementById('feed');
+        f.innerHTML = '';
+        data.forEach((row, i) => {
+            const c = document.createElement('div');
+            c.className = 'card';
+            c.onclick = () => showDetail(i);
+            c.innerHTML = `<div style="color:var(--accent); font-weight:900; font-size:12px;">#${row[3]}</div><div style="font-weight:700;">${row[5]}</div>`;
+            f.appendChild(c);
+        });
+    }
+
+    function showDetail(idx) {
+        const row = entries[idx];
+        let grid = '';
+        headers.forEach((h, i) => {
+            grid += `
+                <div class="detail-box">
+                    <div style="font-size:10px; color:var(--accent); font-weight:800; text-transform:uppercase;">${h}</div>
+                    <div style="font-size:15px; margin-top:5px;">${row[i+4] || '--'}</div>
+                </div>`;
+        });
+        document.getElementById('detailView').innerHTML = `
+            <h1 style="font-size:28px;">${row[5]}</h1>
+            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Submitted by ${row[3]} on ${new Date(row[0]).toLocaleDateString()}</p>
+            <div class="detail-grid">${grid}</div>`;
     }
 
     async function loadConfig() {
-      const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${auth.co}&secretPIN=${auth.pin}`;
-      const res = await fetch(url);
-      const config = await res.json();
-      const list = document.getElementById('toggle-list');
-      list.innerHTML = '';
-      // Skip header row
-      config.slice(1).forEach(row => {
-        const div = document.createElement('div');
-        div.className = 'toggle-row';
-        div.innerHTML = `<span>${row[0]}</span><input type="checkbox" class="f-check" data-name="${row[0]}" ${row[1] === 'ON' ? 'checked' : ''}>`;
-        list.appendChild(div);
-      });
+        const res = await fetch(`${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}`);
+        const config = await res.json();
+        const list = document.getElementById('toggleList');
+        list.innerHTML = '';
+        config.slice(1).forEach(row => {
+            list.innerHTML += `<div class="toggle-row"><span>${row[0]}</span><input type="checkbox" class="cfg" data-name="${row[0]}" ${row[1]==='ON'?'checked':''}></div>`;
+        });
     }
 
-    async function saveFields() {
-      const settings = Array.from(document.querySelectorAll('.f-check')).map(i => ({ name: i.dataset.name, status: i.checked ? 'ON' : 'OFF' }));
-      const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${auth.co}&secretPIN=${auth.pin}&saveData=${encodeURIComponent(JSON.stringify(settings))}`;
-      await fetch(url);
-      alert("Field App Updated!");
+    async function saveConfig() {
+        const btn = event.target; btn.innerText = "SAVING...";
+        const settings = Array.from(document.querySelectorAll('.cfg')).map(i => ({ name: i.dataset.name, status: i.checked ? 'ON' : 'OFF' }));
+        const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}&saveData=${encodeURIComponent(JSON.stringify(settings))}`;
+        await fetch(url);
+        btn.innerText = "SAVE SETTINGS";
+        alert("Configuration updated in Google Sheet.");
     }
-
-    function showDetail(i) {
-      const d = currentData[i];
-      document.getElementById('detail').innerHTML = `<h2>${d[5]}</h2><hr style="margin:20px 0; border:1px solid var(--border)"><p>${d[8]}</p>`;
-    }
-
-    setInterval(loadDashboard, 60000);
   </script>
 </body>
 </html>
