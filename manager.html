@@ -1,90 +1,263 @@
-/**
- * SEND IT IN | Master Brain V14.2
- * Thorough Build: Includes Sheet ID delivery for Dashboard Linking.
- */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MANAGER DASHBOARD | SEND IT IN</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text-main: #ffffff;
+      --text-muted: #cbd5e1;
+      --accent: #0d6efd;
+      --success: #198754;
+      --warning: #f59e0b;
+    }
 
-function doGet(e) {
-  const params = e.parameter;
-  
-  // 1. SECURITY KEY CHECK
-  if (params.secretKey !== "MACHINO_V12_SECURE") {
-    return ContentService.createTextOutput("DENIED: KEY").setMimeType(ContentService.MimeType.TEXT);
-  }
-
-  try {
-    const masterSS = SpreadsheetApp.getActiveSpreadsheet();
-    const routingData = masterSS.getSheetByName("ROUTING_LOG").getDataRange().getValues();
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
-    let targetSheetId = "";
-    let authorized = false;
-    const inputPIN = String(params.secretPIN || "").trim();
-    const inputCoID = String(params.companyID || "").trim().toUpperCase();
+    body { 
+      background-color: var(--bg); 
+      color: var(--text-main); 
+      height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      overflow: hidden; 
+    }
 
-    // 2. SEARCH FOR MATCH
-    for (let i = 1; i < routingData.length; i++) {
-      if (String(routingData[i][0]).trim() === inputPIN && String(routingData[i][1]).trim().toUpperCase() === inputCoID) {
-        targetSheetId = routingData[i][2]; 
-        authorized = true;
-        break;
+    /* HEADER */
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px 20px; 
+      border-bottom: 2px solid var(--border);
+      background-color: var(--bg);
+    }
+    .logo-badge { background-color: var(--card); padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); }
+    .logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; }
+    .logo-blue { color: var(--accent); }
+    .status-indicator { font-size: 11px; font-weight: 800; color: var(--success); letter-spacing: 1px; }
+
+    /* LAYOUT */
+    .dashboard-main { display: flex; flex: 1; overflow: hidden; }
+
+    /* LEFT FEED */
+    .feed-panel { 
+      width: 380px; 
+      border-right: 2px solid var(--border); 
+      overflow-y: auto; 
+      padding: 15px; 
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .feed-header { 
+      font-size: 11px; 
+      font-weight: 900; 
+      color: var(--text-muted); 
+      text-transform: uppercase; 
+      margin-bottom: 15px; 
+      letter-spacing: 1px;
+    }
+
+    /* CARDS */
+    .entry-card {
+      background-color: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .entry-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .entry-card.active { border-color: var(--accent); background: #1e293b; box-shadow: 0 0 15px rgba(13, 110, 253, 0.2); }
+
+    .card-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .worker-id { background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 900; }
+    .time-stamp { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .assignment-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+    
+    .badge { font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+    .badge-yes { background: var(--success); color: white; }
+    .badge-no { background: var(--warning); color: #000; }
+
+    /* RIGHT DETAIL */
+    .detail-panel { flex: 1; overflow-y: auto; padding: 40px; background-color: var(--bg); }
+    .detail-placeholder { 
+      height: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      color: var(--border); 
+      text-align: center;
+    }
+    .detail-content h2 { font-size: 28px; margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+    .detail-item { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+    .detail-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .detail-value { font-size: 18px; font-weight: 600; }
+
+    /* MOBILE OVERRIDE */
+    @media (max-width: 768px) {
+      .feed-panel { width: 100%; }
+      .detail-panel { display: none; } /* Hide detail on phone, focus on feed */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-badge">
+      <div class="logo">SEND<span class="logo-blue">IT</span>IN <span style="font-size:12px; opacity:0.6; font-weight:400; margin-left:10px;">MANAGER DASHBOARD</span></div>
+    </div>
+    <div class="status-indicator" id="syncStatus">● LIVE DATA FEED</div>
+  </div>
+
+  <div class="dashboard-main">
+    <div class="feed-panel" id="feedPanel">
+      <div class="feed-header">Recent Field Entries</div>
+      <div id="entryContainer">
+        <div style="padding:20px; text-align:center; color:var(--border);">Connecting to Master Brain...</div>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-placeholder" id="placeholder">
+        <div style="font-size: 50px; margin-bottom: 10px;">📋</div>
+        <h3>No Entry Selected</h3>
+        <p>Select a worker report from the left to view full details.</p>
+      </div>
+      <div class="detail-content" id="detailContent" hidden>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    // CONFIGURATION - MUST MATCH YOUR APPS SCRIPT
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxy-TDrjDAFKnUJ_wVeCcJwgIET_VA6UVdwL5G75qmFIxT4c6um-iOXb3KE7PMTxIG4/exec'; 
+    const secretKey = 'MACHINO_V12_SECURE';
+    
+    // TEMPORARY TEST CREDENTIALS - We will build a login modal later
+    const testCoID = 'GRV'; // Replace with a valid CoID from your ROUTING_LOG
+    const testPIN = '300045'; // Replace with the matching PIN from your ROUTING_LOG
+
+    let currentEntries = [];
+
+    async function fetchData() {
+      const status = document.getElementById('syncStatus');
+      status.style.color = 'var(--warning)';
+      status.innerText = '● SYNCING...';
+
+      const url = `${scriptURL}?secretKey=${secretKey}&mode=read&companyID=${testCoID}&secretPIN=${testPIN}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.error) {
+          console.error("Auth Error:", data.error);
+          document.getElementById('entryContainer').innerHTML = `<div style="color:red; padding:20px;">AUTH ERROR: ${data.error}</div>`;
+          return;
+        }
+
+        currentEntries = data.entries;
+        renderFeed(data.entries);
+        
+        status.style.color = 'var(--success)';
+        status.innerText = '● LIVE DATA FEED';
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        status.style.color = 'red';
+        status.innerText = '● DISCONNECTED';
       }
     }
 
-    if (!authorized) return jsonResponse({error: "AUTH_FAILED"});
+    function renderFeed(entries) {
+      const container = document.getElementById('entryContainer');
+      container.innerHTML = '';
 
-    // --- MODE: READ (For Dashboard) ---
-    if (params.mode === "read") {
-      const clientSS = SpreadsheetApp.openById(targetSheetId);
-      const rawSheet = clientSS.getSheetByName("RAW_DATA");
-      const data = rawSheet.getDataRange().getValues();
-      return jsonResponse({
-        headers: data[0].slice(4), 
-        entries: data.slice(1, 21), 
-        company: inputCoID,
-        sheetId: targetSheetId
+      if (entries.length === 0) {
+        container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--border);">No entries found for this company.</div>';
+        return;
+      }
+
+      entries.forEach((row, index) => {
+        const card = document.createElement('div');
+        card.className = 'entry-card';
+        card.onclick = () => showDetail(index);
+        
+        const isComplete = row[9] === "YES"; // 10th column in your sheet logic
+        const badgeClass = isComplete ? 'badge-yes' : 'badge-no';
+
+        card.innerHTML = `
+          <div class="card-meta">
+            <span class="worker-id">#${row[3]}</span>
+            <span class="time-stamp">${new Date(row[0]).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+          </div>
+          <div class="assignment-title">${row[5] || 'Untitled Assignment'}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--text-muted); font-weight:600;">${row[4] === "No GPS" ? '📍 No GPS' : '📍 Map Linked'}</span>
+            <span class="badge ${badgeClass}">${row[9]}</span>
+          </div>
+        `;
+        container.appendChild(card);
       });
     }
 
-    // --- MODE: CONFIG (For Field Toggles) ---
-    if (params.mode === "config") {
-      const clientSS = SpreadsheetApp.openById(targetSheetId);
-      let configSheet = clientSS.getSheetByName("CONFIG") || clientSS.insertSheet("CONFIG");
-      
-      if (params.saveData) {
-        const settings = JSON.parse(params.saveData);
-        configSheet.clear().appendRow(["Field", "Status"]);
-        settings.forEach(s => configSheet.appendRow([s.name, s.status]));
-        return ContentService.createTextOutput("SAVED");
-      }
-      
-      const configRows = configSheet.getDataRange().getValues();
-      // Auto-populate if empty
-      if (configRows.length < 2) {
-         configSheet.appendRow(["Field", "Status"]);
-         configSheet.appendRow(["Assignment", "ON"]);
-         return jsonResponse([["Field", "Status"], ["Assignment", "ON"]]);
-      }
-      return jsonResponse(configRows);
+    function showDetail(index) {
+      const entry = currentEntries[index];
+      const placeholder = document.getElementById('placeholder');
+      const content = document.getElementById('detailContent');
+
+      // Highlight active card
+      document.querySelectorAll('.entry-card').forEach((c, i) => {
+        c.classList.toggle('active', i === index);
+      });
+
+      placeholder.hidden = true;
+      content.hidden = false;
+
+      content.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+          <h2>Job Detail: ${entry[5]}</h2>
+          <span class="worker-id" style="font-size:18px; padding:5px 15px;">Worker ID: ${entry[3]}</span>
+        </div>
+        <p style="color:var(--text-muted); font-weight:600;">Submitted: ${new Date(entry[0]).toLocaleString()}</p>
+        
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">Quantity / Value</div>
+            <div class="detail-value">${entry[6] || '--'}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Reference #</div>
+            <div class="detail-value">${entry[7] || '--'}</div>
+          </div>
+          <div class="detail-item" style="grid-column: span 2;">
+            <div class="detail-label">Notes from Field</div>
+            <div class="detail-value" style="font-size:16px; line-height:1.6; white-space: pre-wrap;">${entry[8] || 'No notes provided.'}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Location (GPS)</div>
+            <div class="detail-value"><a href="${entry[4]}" target="_blank" style="color:var(--accent); text-decoration:none;">View on Google Maps ↗</a></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Project Status</div>
+            <div class="detail-value" style="color:${entry[9] === 'YES' ? 'var(--success)' : 'var(--warning)'}">${entry[9] === 'YES' ? 'COMPLETE' : 'IN PROGRESS'}</div>
+          </div>
+        </div>
+      `;
     }
 
-    // --- MODE: WRITE (For Worker App) ---
-    const timestamp = new Date();
-    let mapLink = params.lat && params.long ? "https://www.google.com/maps?q=" + params.lat + "," + params.long : "No GPS";
-    const fullRow = [[timestamp, inputCoID, inputPIN, params.workerName || "Unknown", mapLink, params.assignment || "", params.quantity || "", params.reference || "", params.notes || "", params.complete || ""]];
+    // Auto-refresh every 60 seconds
+    setInterval(fetchData, 60000);
     
-    // Log to Master Backup
-    masterSS.getSheetByName("ALL_REPORTS_BACKUP").insertRowBefore(2).getRange(2, 1, 1, 10).setValues(fullRow);
-    
-    // Log to Client Sheet
-    const clientSS = SpreadsheetApp.openById(targetSheetId);
-    clientSS.getSheetByName("RAW_DATA").insertRowBefore(2).getRange(2, 1, 1, 10).setValues(fullRow);
-
-    return ContentService.createTextOutput("SUCCESS");
-
-  } catch (err) {
-    return ContentService.createTextOutput("ERROR: " + err.toString());
-  }
-}
-
-function jsonResponse(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
+    // Initial Load
+    window.onload = fetchData;
+  </script>
+</body>
+</html>
