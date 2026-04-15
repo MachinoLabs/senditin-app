@@ -1,88 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MANAGER DEBUG | SEND IT IN</title>
-  <style>
-    :root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #ffffff; --accent: #0d6efd; --success: #198754; --muted: #94a3b8; }
-    * { box-sizing: border-box; margin: 0; font-family: sans-serif; }
-    body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-    header { padding: 15px 20px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #020617; }
-    .main { display: flex; flex: 1; overflow: hidden; }
-    #feed { width: 350px; border-right: 2px solid var(--border); overflow-y: auto; padding: 15px; }
-    #center { flex: 1; padding: 40px; overflow-y: auto; }
-    #right-strip { width: 300px; border-left: 2px solid var(--border); padding: 20px; background: var(--card); }
-    .card { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; }
-    .card:hover { border-color: var(--accent); }
-    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-top: 25px; }
-    .detail-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
-    .toggle-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 12px; background: var(--bg); border-radius: 8px; font-size: 13px; }
-    .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; text-decoration: none; font-size: 12px; display: inline-block; }
-    .btn-sheet { background: #198754; color: white; margin-left: 10px; }
-    .btn-save { background: var(--accent); color: white; width: 100%; margin-top: 20px; }
-  </style>
-</head>
-<body>
-  <header>
-    <div style="font-weight:900; font-size:18px;">SEND<span style="color:var(--accent)">IT</span>IN <span style="font-weight:400; font-size:11px; color:var(--muted)">| DEBUG</span></div>
-    <div>
-        <span id="syncStatus" style="color:var(--success); font-size:11px; font-weight:800; margin-right:15px;">● LIVE FEED</span>
-        <a id="sheetLink" href="#" target="_blank" class="btn btn-sheet" style="display:none;">View Google Sheet</a>
-    </div>
-  </header>
-  <div class="main">
-    <div id="feed"></div>
-    <div id="center"><div id="detailView"><h2 style="color:var(--border); text-align:center; margin-top:100px;">Select a field report.</h2></div></div>
-    <div id="right-strip">
-      <h4 style="margin-bottom:15px; color:var(--accent); font-size:11px;">WORKER APP CONFIG</h4>
-      <div id="toggleList"></div>
-      <button class="btn btn-save" onclick="saveConfig()">Save Settings</button>
-    </div>
-  </div>
-  <script>
-    const DEBUG_CO = 'GRV';
-    const DEBUG_PIN = '300045';
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxy-TDrjDAFKnUJ_wVeCcJwgIET_VA6UVdwL5G75qmFIxT4c6um-iOXb3KE7PMTxIG4/exec';
-    let headers = [], entries = [];
-    window.onload = () => { loadDashboard(); loadConfig(); };
-    async function loadDashboard() {
-        const url = `${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=read&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        headers = data.headers; entries = data.entries;
-        if(data.sheetId) {
-            const link = document.getElementById('sheetLink');
-            link.href = `https://docs.google.com/spreadsheets/d/${data.sheetId}/edit`;
-            link.style.display = 'inline-block';
-        }
-        renderFeed(data.entries);
+/**
+ * SEND IT IN | Master Brain V14.2
+ * Thorough Build: Includes Sheet ID delivery for Dashboard Linking.
+ */
+
+function doGet(e) {
+  const params = e.parameter;
+  
+  // 1. SECURITY KEY CHECK
+  if (params.secretKey !== "MACHINO_V12_SECURE") {
+    return ContentService.createTextOutput("DENIED: KEY").setMimeType(ContentService.MimeType.TEXT);
+  }
+
+  try {
+    const masterSS = SpreadsheetApp.getActiveSpreadsheet();
+    const routingData = masterSS.getSheetByName("ROUTING_LOG").getDataRange().getValues();
+    
+    let targetSheetId = "";
+    let authorized = false;
+    const inputPIN = String(params.secretPIN || "").trim();
+    const inputCoID = String(params.companyID || "").trim().toUpperCase();
+
+    // 2. SEARCH FOR MATCH
+    for (let i = 1; i < routingData.length; i++) {
+      if (String(routingData[i][0]).trim() === inputPIN && String(routingData[i][1]).trim().toUpperCase() === inputCoID) {
+        targetSheetId = routingData[i][2]; 
+        authorized = true;
+        break;
+      }
     }
-    function renderFeed(data) {
-        const f = document.getElementById('feed'); f.innerHTML = '';
-        data.forEach((row, i) => {
-            const c = document.createElement('div'); c.className = 'card'; c.onclick = () => showDetail(i);
-            c.innerHTML = `<div style="color:var(--accent); font-weight:900; font-size:12px;">#${row[3]}</div><div style="font-weight:700;">${row[5]}</div>`;
-            f.appendChild(c);
-        });
+
+    if (!authorized) return jsonResponse({error: "AUTH_FAILED"});
+
+    // --- MODE: READ (For Dashboard) ---
+    if (params.mode === "read") {
+      const clientSS = SpreadsheetApp.openById(targetSheetId);
+      const rawSheet = clientSS.getSheetByName("RAW_DATA");
+      const data = rawSheet.getDataRange().getValues();
+      return jsonResponse({
+        headers: data[0].slice(4), 
+        entries: data.slice(1, 21), 
+        company: inputCoID,
+        sheetId: targetSheetId
+      });
     }
-    function showDetail(idx) {
-        const row = entries[idx]; let grid = '';
-        headers.forEach((h, i) => { grid += `<div class="detail-box"><div style="font-size:10px; color:var(--accent); font-weight:800; text-transform:uppercase;">${h}</div><div style="font-size:15px; margin-top:5px;">${row[i+4] || '--'}</div></div>`; });
-        document.getElementById('detailView').innerHTML = `<h1 style="font-size:28px;">${row[5]}</h1><p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Submitted by ${row[3]} on ${new Date(row[0]).toLocaleDateString()}</p><div class="detail-grid">${grid}</div>`;
+
+    // --- MODE: CONFIG (For Field Toggles) ---
+    if (params.mode === "config") {
+      const clientSS = SpreadsheetApp.openById(targetSheetId);
+      let configSheet = clientSS.getSheetByName("CONFIG") || clientSS.insertSheet("CONFIG");
+      
+      if (params.saveData) {
+        const settings = JSON.parse(params.saveData);
+        configSheet.clear().appendRow(["Field", "Status"]);
+        settings.forEach(s => configSheet.appendRow([s.name, s.status]));
+        return ContentService.createTextOutput("SAVED");
+      }
+      
+      const configRows = configSheet.getDataRange().getValues();
+      // Auto-populate if empty
+      if (configRows.length < 2) {
+         configSheet.appendRow(["Field", "Status"]);
+         configSheet.appendRow(["Assignment", "ON"]);
+         return jsonResponse([["Field", "Status"], ["Assignment", "ON"]]);
+      }
+      return jsonResponse(configRows);
     }
-    async function loadConfig() {
-        const res = await fetch(`${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}`);
-        const config = await res.json();
-        const list = document.getElementById('toggleList'); list.innerHTML = '';
-        config.slice(1).forEach(row => { list.innerHTML += `<div class="toggle-row"><span>${row[0]}</span><input type="checkbox" class="cfg" data-name="${row[0]}" ${row[1]==='ON'?'checked':''}></div>`; });
-    }
-    async function saveConfig() {
-        const btn = event.target; btn.innerText = "SAVING...";
-        const settings = Array.from(document.querySelectorAll('.cfg')).map(i => ({ name: i.dataset.name, status: i.checked ? 'ON' : 'OFF' }));
-        await fetch(`${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}&saveData=${encodeURIComponent(JSON.stringify(settings))}`);
-        btn.innerText = "SAVE SETTINGS"; alert("Settings Saved.");
-    }
-  </script>
-</body>
-</html>
+
+    // --- MODE: WRITE (For Worker App) ---
+    const timestamp = new Date();
+    let mapLink = params.lat && params.long ? "https://www.google.com/maps?q=" + params.lat + "," + params.long : "No GPS";
+    const fullRow = [[timestamp, inputCoID, inputPIN, params.workerName || "Unknown", mapLink, params.assignment || "", params.quantity || "", params.reference || "", params.notes || "", params.complete || ""]];
+    
+    // Log to Master Backup
+    masterSS.getSheetByName("ALL_REPORTS_BACKUP").insertRowBefore(2).getRange(2, 1, 1, 10).setValues(fullRow);
+    
+    // Log to Client Sheet
+    const clientSS = SpreadsheetApp.openById(targetSheetId);
+    clientSS.getSheetByName("RAW_DATA").insertRowBefore(2).getRange(2, 1, 1, 10).setValues(fullRow);
+
+    return ContentService.createTextOutput("SUCCESS");
+
+  } catch (err) {
+    return ContentService.createTextOutput("ERROR: " + err.toString());
+  }
+}
+
+function jsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
