@@ -4,243 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SEND IT IN | FIELD APP</title>
-    <meta name="theme-color" content="#0f172a">
-    <link rel="manifest" href="manifest.json">
-    
     <style>
-        :root { 
-            --bg: #0f172a; 
-            --card: #1e293b; 
-            --accent: #0d6efd; 
-            --text: #ffffff; 
-            --muted: #94a3b8; 
-            --success: #198754; 
-            --error: #dc3545;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #0d6efd; --text: #ffffff; --success: #198754; --muted: #94a3b8; }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 400px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h2 { font-weight: 900; margin: 0; }
         
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .app-container { width: 100%; max-width: 450px; }
-
-        .header { 
-            text-align: center; 
-            padding: 20px 0 40px 0; 
-        }
-        .header h1 { 
-            font-size: 28px; 
-            font-weight: 900; 
-            letter-spacing: -1.5px; 
-            margin: 0;
-        }
-        .header span { color: var(--accent); }
-        .version-tag { 
-            font-size: 10px; 
-            color: var(--muted); 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            display: block;
-            margin-top: 5px;
-        }
-
-        /* Form Styling */
-        .form-group { margin-bottom: 24px; position: relative; }
+        label { display: block; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; }
+        input { width: 100%; padding: 16px; border-radius: 10px; border: 1px solid #334155; background: var(--card); color: white; font-size: 16px; }
         
-        label { 
-            display: block; 
-            font-size: 11px; 
-            font-weight: 800; 
-            color: var(--muted); 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            margin-left: 4px;
-        }
-
-        input { 
-            width: 100%; 
-            padding: 18px; 
-            background: var(--card); 
-            border: 2px solid #334155; 
-            border-radius: 14px; 
-            color: white; 
-            font-size: 16px; 
-            transition: border-color 0.3s;
-        }
-        input:focus { 
-            outline: none; 
-            border-color: var(--accent); 
-        }
-
         button { 
-            width: 100%; 
-            padding: 20px; 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            border-radius: 14px; 
-            font-weight: 900; 
-            font-size: 18px; 
-            cursor: pointer; 
-            box-shadow: 0 10px 15px -3px rgba(13, 110, 253, 0.3);
-            margin-top: 10px;
-            transition: transform 0.1s;
+            width: 100%; padding: 20px; background: var(--accent); color: white; border: none; border-radius: 10px; 
+            font-weight: 900; font-size: 18px; cursor: pointer; margin-top: 30px;
+            box-shadow: 0 4px 14px 0 rgba(13, 110, 253, 0.3);
         }
-        button:active { transform: scale(0.98); }
-
-        #status-bar { 
-            text-align: center; 
-            margin-top: 25px; 
-            font-weight: 700; 
-            font-size: 14px;
-            min-height: 20px;
-        }
-
-        .loading-pulse { color: var(--accent); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-
-        /* Success Animation */
-        .success-msg { color: var(--success); }
+        #out { text-align: center; margin-top: 20px; font-weight: 800; }
     </style>
 </head>
 <body>
-
-    <div class="app-container">
+    <div class="container">
         <div class="header">
-            <h1>SEND<span>IT</span>IN</h1>
-            <span class="version-tag">Field Operations V14.2</span>
+            <h2>SEND<span style="color:var(--accent)">IT</span>IN</h2>
+            <div style="font-size:10px; color:var(--muted); margin-top:5px;">FIELD OPERATIONS V14.3</div>
         </div>
 
-        <div id="form-content">
-            <div class="loading-pulse" style="text-align: center;">Connecting to Command Center...</div>
-        </div>
+        <label>Worker Name</label>
+        <input type="text" id="wName" placeholder="Enter Name">
 
-        <div id="status-bar"></div>
+        <label>Assignment</label>
+        <input type="text" id="f_assignment" placeholder="Job details">
+
+        <label>Quantity</label>
+        <input type="text" id="f_quantity" placeholder="Units / Amount">
+
+        <label>Reference #</label>
+        <input type="text" id="f_reference" placeholder="PO or Job #">
+
+        <label>Notes</label>
+        <input type="text" id="f_notes" placeholder="Additional info">
+
+        <label>Complete? (YES/NO)</label>
+        <input type="text" id="f_complete" placeholder="Is the job finished?">
+
+        <button onclick="submitReport()">SEND IT IN</button>
+        <div id="out"></div>
     </div>
 
     <script>
-        // --- CONSTANTS ---
         const DEBUG_CO = 'GRV';
         const DEBUG_PIN = '300045';
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxy-TDrjDAFKnUJ_wVeCcJwgIET_VA6UVdwL5G75qmFIxT4c6um-iOXb3KE7PMTxIG4/exec';
 
-        // 1. DYNAMIC FORM ENGINE
-        async function initializeApp() {
-            const container = document.getElementById('form-content');
-            const statusBar = document.getElementById('status-bar');
-
-            try {
-                // Fetch manager configuration
-                const response = await fetch(`${scriptURL}?secretKey=MACHINO_V12_SECURE&mode=config&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}`);
-                const config = await response.json();
-
-                if (config.error) {
-                    statusBar.innerHTML = `<span style="color:var(--error)">AUTH ERROR: CHECK CONFIG</span>`;
-                    return;
-                }
-
-                // Start building HTML
-                let formHTML = `
-                    <div class="form-group">
-                        <label>Reported By</label>
-                        <input type="text" id="workerName" placeholder="Worker Name" required>
-                    </div>
-                `;
-
-                // Loop through Manager Toggles (skipping header row)
-                config.slice(1).forEach(row => {
-                    const fieldName = row[0];
-                    const status = row[1];
-
-                    if (status === "ON") {
-                        formHTML += `
-                            <div class="form-group">
-                                <label>${fieldName}</label>
-                                <input type="text" id="f_${fieldName}" placeholder="Enter ${fieldName}">
-                            </div>
-                        `;
-                    }
-                });
-
-                formHTML += `<button onclick="submitReport()">SUBMIT REPORT</button>`;
-                container.innerHTML = formHTML;
-                statusBar.innerText = "System Synced.";
-
-            } catch (err) {
-                statusBar.innerHTML = `<span style="color:var(--error)">OFFLINE OR CONNECTION ERROR</span>`;
-                console.error(err);
-            }
-        }
-
-        // 2. DATA SUBMISSION LOGIC
         async function submitReport() {
-            const statusBar = document.getElementById('status-bar');
-            const workerName = document.getElementById('workerName').value.trim();
+            const out = document.getElementById('out');
+            out.innerText = "SENDING...";
+            
+            const name = document.getElementById('wName').value;
+            const assignment = document.getElementById('f_assignment').value;
+            const quantity = document.getElementById('f_quantity').value;
+            const reference = document.getElementById('f_reference').value;
+            const notes = document.getElementById('f_notes').value;
+            const complete = document.getElementById('f_complete').value;
 
-            if (!workerName) {
-                statusBar.innerHTML = `<span style="color:var(--error)">WORKER NAME IS REQUIRED</span>`;
-                return;
-            }
+            if(!name) { out.innerText = "NAME REQUIRED"; return; }
 
-            statusBar.innerHTML = `<span class="loading-pulse">UPLOADING...</span>`;
-
-            // Construct the Data Package
-            let queryParams = `?secretKey=MACHINO_V12_SECURE&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}&workerName=${encodeURIComponent(workerName)}`;
-
-            // Grab all dynamic fields
-            const inputs = document.querySelectorAll('input[id^="f_"]');
-            inputs.forEach(input => {
-                const key = input.id.replace('f_', '').toLowerCase();
-                queryParams += `&${key}=${encodeURIComponent(input.value)}`;
-            });
+            const params = `?secretKey=MACHINO_V12_SECURE&companyID=${DEBUG_CO}&secretPIN=${DEBUG_PIN}&workerName=${encodeURIComponent(name)}&assignment=${encodeURIComponent(assignment)}&quantity=${encodeURIComponent(quantity)}&reference=${encodeURIComponent(reference)}&notes=${encodeURIComponent(notes)}&complete=${encodeURIComponent(complete)}`;
 
             try {
-                const res = await fetch(scriptURL + queryParams);
-                const result = await res.text();
-
-                if (result === "SUCCESS") {
-                    statusBar.innerHTML = `<span class="success-msg">✓ REPORT DELIVERED TO TOP OF SHEET</span>`;
-                    // Clear only dynamic inputs
-                    inputs.forEach(i => i.value = '');
+                const res = await fetch(scriptURL + params);
+                const text = await res.text();
+                if (text === "SUCCESS") {
+                    out.innerHTML = "<span style='color:var(--success)'>✓ REPORT DELIVERED</span>";
+                    document.querySelectorAll('input').forEach(i => i.value = '');
                 } else {
-                    statusBar.innerHTML = `<span style="color:var(--error)">FAILED: ${result}</span>`;
+                    out.innerText = "ERROR: " + text;
                 }
             } catch (e) {
-                statusBar.innerHTML = `<span style="color:var(--error)">NETWORK ERROR</span>`;
+                out.innerText = "CONNECTION ERROR";
             }
         }
-
-        // 3. SERVICE WORKER FOR CACHE BUSTING
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(reg => {
-                    console.log('SW Registered.');
-                    // Check for updates to the code
-                    reg.onupdatefound = () => {
-                        const installingWorker = reg.installing;
-                        installingWorker.onstatechange = () => {
-                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // New content is available, force refresh
-                                window.location.reload();
-                            }
-                        };
-                    };
-                });
-            });
-        }
-
-        // Initial Boot
-        window.onload = initializeApp;
     </script>
 </body>
 </html>
