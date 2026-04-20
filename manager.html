@@ -264,11 +264,14 @@
 
   <script>
     // ==========================================
-    // CORE DASHBOARD LOGIC
+    // CORE DASHBOARD LOGIC (PHASE 2 COMPLETE)
     // ==========================================
     const scriptURL = 'https://script.google.com/macros/s/AKfycbytoGjdnnIXTzYJU7ysV1uYZfhzZrP1mV3sf4UxgjLhEYnsvgVt1fByRwJPJY34RZ0/exec';
+    
     let currentReports = [];
-    let currentActiveRowIndex = null; // To track which row is being edited
+    let currentHistory = [];
+    let currentTeam = [];
+    let currentRowData = null; // Tracks the exact report you are currently editing
 
     // View Switcher (Tabs)
     function switchView(viewId, tabElement) {
@@ -289,38 +292,58 @@
       const id = document.getElementById('coID').value.toUpperCase();
       const key = document.getElementById('aKey').value.toUpperCase();
       const msg = document.getElementById('authMsg');
-      msg.innerText = "VERIFYING...";
+      msg.innerText = "VERIFYING & DOWNLOADING VAULT...";
 
       try {
         const response = await fetch(`${scriptURL}?mode=fetch&companyID=${id}&alphaKey=${key}`);
         const data = await response.json();
+        
         if (data.success) {
           document.getElementById('login-overlay').style.display = 'none';
           
-          // Wire up the Vault Button dynamically based on the returned sheet ID (if you return it), 
-          // or just show the button if auth succeeds (we can wire the exact URL later).
+          // Activate the Trust Anchor (Google Sheets Link)
           const vaultBtn = document.getElementById('vaultLink');
           vaultBtn.style.display = 'block';
-          // vaultBtn.href = `https://docs.google.com/spreadsheets/d/${data.sheetId}`; // For Phase 2
+          vaultBtn.href = `https://docs.google.com/spreadsheets/d/${data.sheetId}`; 
 
-          currentReports = data.reports;
+          // Save our payloads
+          currentReports = data.reports || [];
+          currentHistory = data.history || [];
+          currentTeam = data.team || [];
+          
+          // Render the screens
           renderFeed();
+          renderHistory();
+          renderTeam();
         } else {
-          msg.innerText = "ACCESS DENIED";
+          msg.innerText = "ACCESS DENIED. CHECK CREDENTIALS.";
         }
-      } catch (e) { msg.innerText = "CONNECTION ERROR"; }
+      } catch (e) { 
+        msg.innerText = "CONNECTION ERROR."; 
+      }
     }
 
+    // ==========================================
+    // INBOX & QC TERMINAL
+    // ==========================================
     function renderFeed() {
       const container = document.getElementById('entryContainer');
       container.innerHTML = '';
-      currentReports.shift(); // Remove header row
-      currentReports.reverse(); // Show newest reports at the top
       
-      currentReports.forEach((row, i) => {
+      // Clean and sort the STAGING data
+      let displayReports = [...currentReports];
+      displayReports.shift(); // Remove header row
+      displayReports.reverse(); // Show newest first
+      
+      if (displayReports.length === 0) {
+        container.innerHTML = `<div style="padding: 20px; color: var(--text-muted); font-weight: 600; text-align: center;">Inbox Zero! No new reports.</div>`;
+        return;
+      }
+
+      displayReports.forEach((row, i) => {
         const card = document.createElement('div');
         card.className = 'entry-card';
-        card.onclick = () => showDetail(row, card, i);
+        card.onclick = () => showDetail(row, card);
         card.innerHTML = `
           <div class="assignment-title">${row[5] || 'Unassigned'}</div>
           <div class="worker-id">Agent: ${row[3] || 'Unknown'}</div>
@@ -329,23 +352,23 @@
       });
     }
 
-    // Render the QC Terminal
-    function showDetail(row, cardElement, index) {
+    function showDetail(row, cardElement) {
       document.querySelectorAll('.entry-card').forEach(c => c.classList.remove('active'));
       cardElement.classList.add('active');
       document.getElementById('placeholder').hidden = true;
       
-      // Unlock the Manager's Desk
+      // Lock onto this specific row of data so the brain knows what to archive
+      currentRowData = row;
+      
+      // Unlock the Manager's Desk Notepad
       const desk = document.getElementById('deskPanel');
       desk.style.opacity = '1';
       desk.style.pointerEvents = 'auto';
-      document.getElementById('managerNotes').value = ''; // Clear notepad for new report
-      currentActiveRowIndex = index;
+      document.getElementById('managerNotes').value = ''; 
 
       const content = document.getElementById('detailContent');
       content.hidden = false;
       
-      // Build the QC Interface (Editable vs Locked)
       content.innerHTML = `
         <div class="qc-header">
           <h1 style="font-size:28px; font-weight:900; margin-bottom: 5px;">Quality Control Review</h1>
@@ -386,22 +409,134 @@
       `;
     }
 
-    // Phase 2 Placeholder Action
-    function approveAndArchive() {
+    // ==========================================
+    // THE APPROVE & ARCHIVE ENGINE
+    // ==========================================
+    async function approveAndArchive() {
+      if (!currentRowData) return;
+
       const btn = document.querySelector('.approve-btn');
-      btn.innerText = "ARCHIVING...";
+      btn.innerText = "ARCHIVING TO LEDGER...";
       btn.style.background = "var(--text-muted)";
-      
-      // This is where we will hook up to the Google Apps Script in Phase 2
-      setTimeout(() => {
-        alert("Phase 2 Hook: This will save the edits, add the manager's note, push to the LEDGER, and remove from the INBOX.");
+      btn.disabled = true;
+
+      // Build the JSON Payload containing edits and notes
+      const payload = {
+        mode: "approve",
+        companyID: document.getElementById('coID').value.toUpperCase(),
+        alphaKey: document.getElementById('aKey').value.toUpperCase(),
+        originalTimestamp: currentRowData[0], // Helps the script find the exact row
+        agentID: currentRowData[3],           // Helps the script find the exact row
+        assignment: document.getElementById('edit-assignment').value,
+        quantity: document.getElementById('edit-qty').value,
+        reference: document.getElementById('edit-ref').value,
+        notes: document.getElementById('edit-notes').value,
+        managerNotes: document.getElementById('managerNotes').value
+      };
+
+      try {
+        // Send to Apps Script using text/plain to avoid CORS preflight blocking
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          btn.innerText = "SUCCESS! ARCHIVED.";
+          btn.style.background = "var(--success)";
+          
+          // Clear the UI and quickly refresh the dashboard
+          setTimeout(() => {
+            document.getElementById('detailContent').hidden = true;
+            document.getElementById('placeholder').hidden = false;
+            document.getElementById('deskPanel').style.opacity = '0.5';
+            document.getElementById('deskPanel').style.pointerEvents = 'none';
+            btn.innerText = "APPROVE & ARCHIVE";
+            btn.disabled = false;
+            
+            // Re-fetch everything to update Inbox and History tabs seamlessly
+            authManager(); 
+          }, 1500);
+        } else {
+          alert("Archive Failed: " + result.error);
+          btn.innerText = "APPROVE & ARCHIVE";
+          btn.style.background = "var(--success)";
+          btn.disabled = false;
+        }
+      } catch (err) {
+        alert("Connection Error. Could not archive.");
         btn.innerText = "APPROVE & ARCHIVE";
         btn.style.background = "var(--success)";
-      }, 1000);
+        btn.disabled = false;
+      }
     }
 
     // ==========================================
-    // STANDARD MACHINO-LABS INFO MODAL LOGIC
+    // HISTORY & TEAM TABS (AUTO-GENERATED)
+    // ==========================================
+    function renderHistory() {
+      const container = document.getElementById('view-history');
+      let html = `<h2 style="margin-bottom: 20px;">Ledger History</h2>`;
+      
+      if (currentHistory.length <= 1) {
+         html += `<p style="color: var(--text-muted);">No archived reports yet. Your Ledger is empty.</p>`;
+      } else {
+         html += `<div style="display:grid; gap:12px; max-width: 800px;">`;
+         // Loop backwards to show newest history first (skip header row)
+         for (let i = currentHistory.length - 1; i >= 1; i--) {
+            let r = currentHistory[i];
+            html += `
+              <div style="background:var(--card); padding:20px; border-radius:10px; border:1px solid var(--border);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <strong style="color:var(--text-main); font-size:16px;">${r[5] || 'Unassigned Task'}</strong>
+                  <span style="font-size:12px; color:var(--text-muted); font-weight:800; background:rgba(0,0,0,0.2); padding:4px 8px; border-radius:4px;">${new Date(r[0]).toLocaleString()}</span>
+                </div>
+                <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Agent ID: <span style="color:var(--accent); font-weight:700;">${r[3]}</span> | Location: <a href="${r[4]}" target="_blank" style="color:var(--accent); text-decoration:none;">GPS Maps ↗</a></div>
+                <div style="background:var(--bg); padding:12px; border-radius:6px; border-left:3px solid var(--warning); font-size:13px; color:var(--text-main);">
+                  <strong style="color:var(--warning);">Manager Notes:</strong><br>
+                  ${r[11] || 'No manager notes provided.'}
+                </div>
+              </div>`;
+         }
+         html += `</div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function renderTeam() {
+      const container = document.getElementById('view-team');
+      let html = `
+        <h2 style="margin-bottom: 20px;">Team Directory</h2>
+        <div style="background:var(--card); padding:25px; border-radius:10px; border:1px solid var(--border); max-width: 800px;">
+          <h3 style="margin-bottom:15px; font-size:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">Active Worker PINs</h3>
+          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:12px;">`;
+      
+      // Loop through PIN_LOG (skip header)
+      for (let i = 1; i < currentTeam.length; i++) {
+         let r = currentTeam[i];
+         if(r[0] !== "") { // If PIN exists
+           html += `
+             <div style="background:var(--bg); padding:15px; border-radius:8px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+               <div>
+                 <div style="color:var(--text-muted); font-size:10px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Access PIN</div>
+                 <strong style="color:var(--text-main); font-size:18px; letter-spacing:1px;">${r[0]}</strong>
+               </div>
+               <div style="text-align:right;">
+                 <div style="color:var(--text-muted); font-size:10px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Worker</div>
+                 <span style="color:var(--accent); font-weight:700; font-size:13px;">${r[2]}</span>
+               </div>
+             </div>`;
+         }
+      }
+      html += `</div></div>`;
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // INFO MODAL
     // ==========================================
     (function initInfoModal() {
       const infoBtn = document.getElementById("infoBtn");
@@ -426,6 +561,8 @@
       document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !infoModal.hidden) closeInfo(); });
       setActiveTab("about");
     })();
+  </script>
+    
   </script>
 </body>
 </html>
