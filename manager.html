@@ -15,6 +15,7 @@
       --accent: #0d6efd;
       --success: #198754;
       --warning: #f59e0b;
+      --input-bg: #0b1120;
     }
 
     /* LIGHT MODE OVERRIDES */
@@ -24,6 +25,7 @@
       --border: #cbd5e1;
       --text-main: #0f172a;
       --text-muted: #475569;
+      --input-bg: #f1f5f9;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -32,37 +34,95 @@
 
     /* HEADER */
     .header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 15px 25px; 
-      background: var(--card); 
-      border-bottom: 1px solid var(--border); 
-      z-index: 10;
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 15px 25px; background: var(--card); border-bottom: 1px solid var(--border); z-index: 10;
     }
     .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
     .logo-blue { color: var(--accent); }
     .nav-controls { display: flex; gap: 20px; align-items: center; }
-    .nav-btn { font-size: 24px; cursor: pointer; user-select: none; }
+    .nav-btn { font-size: 20px; cursor: pointer; user-select: none; display: flex; align-items: center;}
+    
+    /* THE TRUST ANCHOR */
+    .vault-btn {
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-main); text-decoration: none; border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 6px; background: rgba(255,255,255,0.05); transition: background 0.2s;
+    }
+    .vault-btn:hover { background: rgba(255,255,255,0.1); }
 
-    /* DASHBOARD LAYOUT */
-    .dashboard-main { display: flex; flex: 1; overflow: hidden; }
-    .feed-panel { width: 350px; border-right: 1px solid var(--border); overflow-y: auto; background: var(--bg); }
-    .detail-panel { flex: 1; overflow-y: auto; padding: 40px; background: var(--bg); }
+    /* SAAS NAVIGATION TABS */
+    .app-nav {
+      display: flex; background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 25px;
+    }
+    .app-nav-tab {
+      padding: 15px 20px; font-size: 12px; font-weight: 800; color: var(--text-muted);
+      cursor: pointer; border-bottom: 3px solid transparent; text-transform: uppercase; transition: all 0.2s;
+    }
+    .app-nav-tab.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
+    .app-nav-tab:hover:not(.active) { color: var(--text-main); }
+
+    /* DASHBOARD LAYOUTS */
+    .view-container { display: none; flex: 1; overflow: hidden; }
+    .view-container.active { display: flex; }
+    
+    /* 3-COLUMN INBOX LAYOUT */
+    .feed-panel { width: 300px; border-right: 1px solid var(--border); overflow-y: auto; background: var(--bg); }
+    .qc-panel { flex: 1; overflow-y: auto; padding: 30px; background: var(--bg); }
+    .desk-panel { width: 380px; border-left: 1px solid var(--border); background: var(--card); padding: 20px; display: flex; flex-direction: column; }
 
     /* ENTRY CARDS */
-    .entry-card { padding: 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+    .entry-card { padding: 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; border-left: 4px solid transparent; }
     .entry-card:hover { background: var(--card); }
     .entry-card.active { background: var(--card); border-left: 4px solid var(--accent); }
-    .assignment-title { font-weight: 800; font-size: 16px; margin-bottom: 5px; }
-    .worker-id { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .assignment-title { font-weight: 800; font-size: 15px; margin-bottom: 5px; }
+    .worker-id { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
 
-    /* DETAILS VIEW */
-    .detail-header { margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 20px; }
-    .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .detail-item { background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid var(--border); }
-    .detail-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-    .detail-value { font-weight: 700; font-size: 15px; }
+    /* QC TERMINAL (CENTER) */
+    .qc-header { margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+    .qc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    
+    .qc-item { background: var(--card); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+    .qc-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between;}
+    
+    /* Input Styling for Editable Fields */
+    .qc-input, .qc-textarea {
+      width: 100%; background: var(--input-bg); border: 1px solid var(--border); color: var(--text-main);
+      padding: 10px; border-radius: 6px; font-size: 14px; font-weight: 600; outline: none; transition: border 0.2s;
+    }
+    .qc-input:focus, .qc-textarea:focus { border-color: var(--accent); }
+    .qc-textarea { resize: vertical; min-height: 80px; }
+    
+    /* Locked Field Styling */
+    .locked-badge { font-size: 9px; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; color: var(--warning); }
+    .locked-text { font-size: 14px; font-weight: 600; color: var(--text-muted); padding: 10px 0; }
+
+    /* SKEUOMORPHIC NOTEPAD (RIGHT) */
+    .desk-title { font-size: 12px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
+    
+    .notepad-wrapper {
+      flex: 1; background-color: #fdfae6; /* Pale yellow paper */
+      background-image: repeating-linear-gradient(transparent, transparent 31px, #cbd5e1 31px, #cbd5e1 32px); /* Blue-ish lines */
+      border-radius: 4px 12px 12px 4px; box-shadow: 4px 6px 15px rgba(0,0,0,0.3); position: relative; margin-bottom: 20px; overflow: hidden;
+    }
+    /* The Red Margin Line */
+    .notepad-wrapper::before { content: ''; position: absolute; top: 0; bottom: 0; left: 45px; width: 2px; background: #fca5a5; z-index: 1; }
+    /* The spiral binding effect */
+    .notepad-wrapper::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 12px; background: rgba(0,0,0,0.05); border-right: 1px solid rgba(0,0,0,0.1); z-index: 1;}
+
+    .notepad-input {
+      width: 100%; height: 100%; background: transparent; border: none; outline: none; resize: none;
+      padding: 35px 20px 20px 55px; /* Aligns text perfectly with lines and margin */
+      font-size: 16px; line-height: 32px; color: #1e293b; position: relative; z-index: 2; font-weight: 500;
+    }
+
+    /* THE ACTION BUTTON */
+    .approve-btn {
+      width: 100%; padding: 18px; background: var(--success); color: white; border: none;
+      border-radius: 8px; font-size: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3); transition: transform 0.1s, background 0.2s;
+    }
+    .approve-btn:hover { background: #157347; transform: translateY(-2px); }
+    .approve-btn:active { transform: translateY(0); }
 
     /* LOGIN OVERLAY */
     #login-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
@@ -75,28 +135,20 @@
        ========================================== */
     .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
     .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
-    
-    /* THE FIX: Ensure hidden totally overrides flexbox */
-    .ml-info-modal[hidden], 
-    .ml-info-overlay[hidden] { 
-      display: none !important; 
-    }
-
+    .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none !important; }
     .ml-info-modal-inner { background: #f7f6f2; color: #111827; border-radius: 12px; padding: 24px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; }
     .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .ml-info-header h2 { margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;}
-    .ml-info-close { border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
+    .ml-info-close { border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
     .ml-info-close:hover { background: rgba(0,0,0,0.1); }
     .ml-info-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; }
-    .ml-info-tab { border-radius: 999px; border: 1px solid rgba(15, 23, 42, 0.18); background: rgba(15, 23, 42, 0.02); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; touch-action: manipulation; transition: all 0.2s; }
+    .ml-info-tab { border-radius: 999px; border: 1px solid rgba(15, 23, 42, 0.18); background: rgba(15, 23, 42, 0.02); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .ml-info-tab-active { background: #0b1220; color: #f9fafb; border-color: #0b1220; }
     .ml-info-body { max-height: 55vh; overflow-y: auto; font-size: 14px; line-height: 1.6; padding-right: 4px; color: #334155;}
     .ml-info-body h3 { margin: 4px 0 8px; font-size: 15px; color: #0f172a; font-weight: 700;}
     .ml-info-body p, .ml-info-body ul { margin-top: 0; margin-bottom: 14px; }
     .ml-info-body a { color: #2563eb; text-decoration: none; font-weight: 600; }
     .ml-info-panel[hidden] { display: none; }
-    
-    /* MachinoLabs Footer Styling */
     .footer-tag { margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #475569;}
     .footer-credits { font-size: 13px; line-height: 1.6; color: #64748b;}
   </style>
@@ -106,9 +158,16 @@
   <div class="header">
     <div class="logo">SEND<span class="logo-blue">IT</span>IN <span style="font-size:12px; opacity:0.6; font-weight:400; margin-left:10px;">MANAGER DASHBOARD</span></div>
     <div class="nav-controls">
+      <a href="#" id="vaultLink" target="_blank" class="vault-btn" style="display:none;">OPEN VAULT ↗</a>
       <div class="nav-btn" id="infoBtn">ⓘ</div>
       <div class="nav-btn" id="themeToggle">☀️</div>
     </div>
+  </div>
+
+  <div class="app-nav">
+    <div class="app-nav-tab active" onclick="switchView('view-inbox', this)">📥 Inbox</div>
+    <div class="app-nav-tab" onclick="switchView('view-history', this)">🗄️ History</div>
+    <div class="app-nav-tab" onclick="switchView('view-team', this)">👥 Team</div>
   </div>
 
   <div id="login-overlay">
@@ -121,34 +180,52 @@
     </div>
   </div>
 
-  <div class="dashboard-main">
+  <div id="view-inbox" class="view-container active">
+    
     <div class="feed-panel" id="entryContainer"></div>
-    <div class="detail-panel">
-      <div id="placeholder" style="text-align:center; margin-top:100px; color:var(--text-muted);">
-        <h3>Select an entry to view details</h3>
+    
+    <div class="qc-panel">
+      <div id="placeholder" style="text-align:center; margin-top:150px; color:var(--text-muted);">
+        <h3>Select a report from the inbox to begin review.</h3>
       </div>
-      <div id="detailContent" hidden></div>
+      <div id="detailContent" hidden>
+        </div>
+    </div>
+
+    <div class="desk-panel" id="deskPanel" style="opacity: 0.5; pointer-events: none;">
+      <div class="desk-title">Manager's Notes</div>
+      <div class="notepad-wrapper">
+        <textarea id="managerNotes" class="notepad-input" placeholder="Add internal notes before archiving..."></textarea>
+      </div>
+      <button class="approve-btn" onclick="approveAndArchive()">APPROVE & ARCHIVE</button>
     </div>
   </div>
+
+  <div id="view-history" class="view-container" style="flex-direction: column; padding: 40px;">
+    <h2 style="margin-bottom: 10px;">Ledger History</h2>
+    <p style="color: var(--text-muted);">The last 50 approved field reports will appear here. (Coming in Phase 2)</p>
+  </div>
+
+  <div id="view-team" class="view-container" style="flex-direction: column; padding: 40px;">
+    <h2 style="margin-bottom: 10px;">Team Directory</h2>
+    <p style="color: var(--text-muted);">Manage PINs and add new field workers here. (Coming in Phase 2)</p>
+  </div>
+
 
   <div id="infoOverlay" class="ml-info-overlay" hidden></div>
   <div id="infoModal" class="ml-info-modal" hidden>
     <div class="ml-info-modal-inner">
-      
       <div class="ml-info-header">
         <h2>System Information</h2>
         <button id="infoCloseBtn" class="ml-info-close" type="button" aria-label="Close info">✕</button>
       </div>
-      
       <div class="ml-info-tabs">
         <button class="ml-info-tab ml-info-tab-active" data-tab="about" type="button">The Solution</button>
         <button class="ml-info-tab" data-tab="how" type="button">Field Guide</button>
         <button class="ml-info-tab" data-tab="faq" type="button">FAQ</button>
         <button class="ml-info-tab" data-tab="credits" type="button">Credits</button>
       </div>
-      
       <div class="ml-info-body">
-        
         <section class="ml-info-panel" data-panel="about">
           <h3>Direct Manager Control</h3>
           <p>This dashboard pulls data directly from your specific client spreadsheet, allowing you to review field reports in real-time.</p>
@@ -158,7 +235,6 @@
             <li>Clean, distraction-free interface.</li>
           </ul>
         </section>
-        
         <section class="ml-info-panel" data-panel="how" hidden>
           <h3>Field Data Guide</h3>
           <ul>
@@ -167,13 +243,11 @@
             <li><strong>Agent:</strong> The internal ID or name of the worker who submitted the report.</li>
           </ul>
         </section>
-        
         <section class="ml-info-panel" data-panel="faq" hidden>
           <h3>Dashboard Tips</h3>
           <p><strong>Is this a live feed?</strong><br>Yes, the moment a field worker gets a cellular signal and their report clears the background sync, it will appear here upon refresh.</p>
           <p><strong>Hard to read in a bright truck?</strong><br>Use the ☀️ icon in the top right header to switch to Light Mode for high-glare environments.</p>
         </section>
-        
         <section class="ml-info-panel" data-panel="credits" hidden>
           <div style="text-align: center; margin-top: 10px;">
             <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
@@ -184,7 +258,6 @@
             </div>
           </div>
         </section>
-        
       </div>
     </div>
   </div>
@@ -195,12 +268,23 @@
     // ==========================================
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzEGm-S_s3kGpqOvqZKvdp_xGp7D64nPi_2JfHjbP3-PUWIgnOMUM4LDcSjLb3X396O/exec';
     let currentReports = [];
+    let currentActiveRowIndex = null; // To track which row is being edited
 
+    // View Switcher (Tabs)
+    function switchView(viewId, tabElement) {
+      document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      document.querySelectorAll('.app-nav-tab').forEach(el => el.classList.remove('active'));
+      tabElement.classList.add('active');
+    }
+
+    // Theme Toggle
     document.getElementById('themeToggle').onclick = () => {
       document.body.classList.toggle('light-mode');
       document.getElementById('themeToggle').innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     };
 
+    // Auth & Fetch
     async function authManager() {
       const id = document.getElementById('coID').value.toUpperCase();
       const key = document.getElementById('aKey').value.toUpperCase();
@@ -212,6 +296,13 @@
         const data = await response.json();
         if (data.success) {
           document.getElementById('login-overlay').style.display = 'none';
+          
+          // Wire up the Vault Button dynamically based on the returned sheet ID (if you return it), 
+          // or just show the button if auth succeeds (we can wire the exact URL later).
+          const vaultBtn = document.getElementById('vaultLink');
+          vaultBtn.style.display = 'block';
+          // vaultBtn.href = `https://docs.google.com/spreadsheets/d/${data.sheetId}`; // For Phase 2
+
           currentReports = data.reports;
           renderFeed();
         } else {
@@ -223,13 +314,13 @@
     function renderFeed() {
       const container = document.getElementById('entryContainer');
       container.innerHTML = '';
-      currentReports.shift(); 
+      currentReports.shift(); // Remove header row
       currentReports.reverse(); // Show newest reports at the top
       
       currentReports.forEach((row, i) => {
         const card = document.createElement('div');
         card.className = 'entry-card';
-        card.onclick = () => showDetail(row, card);
+        card.onclick = () => showDetail(row, card, i);
         card.innerHTML = `
           <div class="assignment-title">${row[5] || 'Unassigned'}</div>
           <div class="worker-id">Agent: ${row[3] || 'Unknown'}</div>
@@ -238,26 +329,75 @@
       });
     }
 
-    function showDetail(row, cardElement) {
+    // Render the QC Terminal
+    function showDetail(row, cardElement, index) {
       document.querySelectorAll('.entry-card').forEach(c => c.classList.remove('active'));
       cardElement.classList.add('active');
       document.getElementById('placeholder').hidden = true;
+      
+      // Unlock the Manager's Desk
+      const desk = document.getElementById('deskPanel');
+      desk.style.opacity = '1';
+      desk.style.pointerEvents = 'auto';
+      document.getElementById('managerNotes').value = ''; // Clear notepad for new report
+      currentActiveRowIndex = index;
+
       const content = document.getElementById('detailContent');
       content.hidden = false;
       
+      // Build the QC Interface (Editable vs Locked)
       content.innerHTML = `
-        <div class="detail-header">
-          <h1 style="font-size:32px; font-weight:900;">${row[5] || 'Unassigned'}</h1>
-          <p style="color:var(--text-muted); font-weight:600;">Report submitted by ${row[3]} on ${new Date(row[0]).toLocaleString()}</p>
+        <div class="qc-header">
+          <h1 style="font-size:28px; font-weight:900; margin-bottom: 5px;">Quality Control Review</h1>
+          <p style="color:var(--text-muted); font-weight:600; font-size: 13px;">Modify fields if necessary before archiving.</p>
         </div>
-        <div class="detail-grid">
-          <div class="detail-item"><div class="detail-label">Quantity</div><div class="detail-value">${row[6] || '--'}</div></div>
-          <div class="detail-item"><div class="detail-label">Reference #</div><div class="detail-value">${row[7] || '--'}</div></div>
-          <div class="detail-item" style="grid-column: span 2;"><div class="detail-label">Notes</div><div class="detail-value" style="white-space:pre-wrap;">${row[8] || 'No notes provided.'}</div></div>
-          <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value"><a href="${row[4]}" target="_blank" style="color:var(--accent); text-decoration:none;">View Maps ↗</a></div></div>
-          <div class="detail-item"><div class="detail-label">Task Status</div><div class="detail-value" style="color:${row[9] === 'YES' ? 'var(--success)' : 'var(--warning)'}">${row[9] || 'N/A'}</div></div>
+        
+        <div class="qc-grid">
+          <div class="qc-item">
+            <div class="qc-label">Submitted <span class="locked-badge">LOCKED</span></div>
+            <div class="locked-text">${new Date(row[0]).toLocaleString()}</div>
+          </div>
+          <div class="qc-item">
+            <div class="qc-label">Agent ID <span class="locked-badge">LOCKED</span></div>
+            <div class="locked-text" style="color: var(--accent);">${row[3]}</div>
+          </div>
+          <div class="qc-item" style="grid-column: span 2;">
+            <div class="qc-label">GPS Location <span class="locked-badge">LOCKED</span></div>
+            <div class="locked-text"><a href="${row[4]}" target="_blank" style="color:var(--accent); text-decoration:none;">View Maps ↗</a></div>
+          </div>
+
+          <div class="qc-item" style="grid-column: span 2;">
+            <div class="qc-label">Assignment</div>
+            <input type="text" id="edit-assignment" class="qc-input" value="${row[5] || ''}">
+          </div>
+          <div class="qc-item">
+            <div class="qc-label">Quantity</div>
+            <input type="text" id="edit-qty" class="qc-input" value="${row[6] || ''}">
+          </div>
+          <div class="qc-item">
+            <div class="qc-label">Reference #</div>
+            <input type="text" id="edit-ref" class="qc-input" value="${row[7] || ''}">
+          </div>
+          <div class="qc-item" style="grid-column: span 2;">
+            <div class="qc-label">Worker Notes</div>
+            <textarea id="edit-notes" class="qc-textarea">${row[8] || ''}</textarea>
+          </div>
         </div>
       `;
+    }
+
+    // Phase 2 Placeholder Action
+    function approveAndArchive() {
+      const btn = document.querySelector('.approve-btn');
+      btn.innerText = "ARCHIVING...";
+      btn.style.background = "var(--text-muted)";
+      
+      // This is where we will hook up to the Google Apps Script in Phase 2
+      setTimeout(() => {
+        alert("Phase 2 Hook: This will save the edits, add the manager's note, push to the LEDGER, and remove from the INBOX.");
+        btn.innerText = "APPROVE & ARCHIVE";
+        btn.style.background = "var(--success)";
+      }, 1000);
     }
 
     // ==========================================
@@ -271,43 +411,19 @@
       const tabButtons = Array.from(document.querySelectorAll(".ml-info-tab"));
       const panels = Array.from(document.querySelectorAll(".ml-info-panel"));
 
-      function openInfo() { 
-        infoOverlay.hidden = false; 
-        infoModal.hidden = false; 
-      }
-      
-      function closeInfo() { 
-        infoOverlay.hidden = true; 
-        infoModal.hidden = true; 
-      }
+      function openInfo() { infoOverlay.hidden = false; infoModal.hidden = false; }
+      function closeInfo() { infoOverlay.hidden = true; infoModal.hidden = true; }
 
       function setActiveTab(tabName) {
-        tabButtons.forEach(btn => {
-          btn.classList.toggle("ml-info-tab-active", btn.dataset.tab === tabName);
-        });
-        panels.forEach(panel => {
-          panel.hidden = (panel.dataset.panel !== tabName);
-        });
+        tabButtons.forEach(btn => btn.classList.toggle("ml-info-tab-active", btn.dataset.tab === tabName));
+        panels.forEach(panel => panel.hidden = (panel.dataset.panel !== tabName));
       }
 
-      // Toggle modal on the header 'i' icon
-      infoBtn.addEventListener("click", () => {
-        infoModal.hidden ? openInfo() : closeInfo();
-      });
-      
+      infoBtn.addEventListener("click", () => infoModal.hidden ? openInfo() : closeInfo());
       infoOverlay.addEventListener("click", closeInfo);
       infoCloseBtn.addEventListener("click", closeInfo);
-
-      tabButtons.forEach(btn => {
-        btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !infoModal.hidden) {
-          closeInfo();
-        }
-      });
-
+      tabButtons.forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !infoModal.hidden) closeInfo(); });
       setActiveTab("about");
     })();
   </script>
