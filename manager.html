@@ -15,9 +15,6 @@
       --accent: #0d6efd;
       --success: #198754;
       --warning: #f59e0b;
-      --modal-bg: #f8fafc;
-      --tab-inactive: #e2e8f0;
-      --tab-active: #000000;
     }
 
     /* LIGHT MODE OVERRIDES */
@@ -67,25 +64,41 @@
     .detail-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
     .detail-value { font-weight: 700; font-size: 15px; }
 
-    /* MODAL STYLES */
-    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; }
-    .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
-    .ml-info-modal-inner { background: var(--modal-bg); color: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; }
-    .tab-btn { border-radius: 8px; border: none; background: var(--tab-inactive); padding: 12px 4px; font-size: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; color: #475569; }
-    .tab-btn.ml-info-tab-active { background: var(--tab-active); color: #ffffff; }
-    .panel h3 { font-size: 18px; margin-bottom: 12px; color: #0f172a; border-left: 4px solid #0d6efd; padding-left: 10px; font-weight: 900; }
-    .panel p { margin-bottom: 14px; font-size: 14px; line-height: 1.6; }
-    .panel[hidden] { display: none; }
-    .footer { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
-    .footer-tag { font-size: 12px; font-weight: 800; color: #64748b; margin-bottom: 8px; }
-    .footer-credits { font-size: 11px; font-weight: 600; color: #94a3b8; }
-    .footer-credits a { color: #0d6efd; text-decoration: none; }
-
     /* LOGIN OVERLAY */
     #login-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .login-box { background: var(--card); padding: 40px; border-radius: 12px; text-align: center; width: 340px; border: 1px solid var(--border); }
     .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; text-align: center; }
     .login-box button { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; }
+
+    /* ==========================================
+       STANDARD MACHINO-LABS INFO MODAL CSS
+       ========================================== */
+    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
+    .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+    
+    /* THE FIX: Ensure hidden totally overrides flexbox */
+    .ml-info-modal[hidden], 
+    .ml-info-overlay[hidden] { 
+      display: none !important; 
+    }
+
+    .ml-info-modal-inner { background: #f7f6f2; color: #111827; border-radius: 12px; padding: 24px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; }
+    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .ml-info-header h2 { margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;}
+    .ml-info-close { border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
+    .ml-info-close:hover { background: rgba(0,0,0,0.1); }
+    .ml-info-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; }
+    .ml-info-tab { border-radius: 999px; border: 1px solid rgba(15, 23, 42, 0.18); background: rgba(15, 23, 42, 0.02); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; touch-action: manipulation; transition: all 0.2s; }
+    .ml-info-tab-active { background: #0b1220; color: #f9fafb; border-color: #0b1220; }
+    .ml-info-body { max-height: 55vh; overflow-y: auto; font-size: 14px; line-height: 1.6; padding-right: 4px; color: #334155;}
+    .ml-info-body h3 { margin: 4px 0 8px; font-size: 15px; color: #0f172a; font-weight: 700;}
+    .ml-info-body p, .ml-info-body ul { margin-top: 0; margin-bottom: 14px; }
+    .ml-info-body a { color: #2563eb; text-decoration: none; font-weight: 600; }
+    .ml-info-panel[hidden] { display: none; }
+    
+    /* MachinoLabs Footer Styling */
+    .footer-tag { margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #475569;}
+    .footer-credits { font-size: 13px; line-height: 1.6; color: #64748b;}
   </style>
 </head>
 <body>
@@ -109,8 +122,7 @@
   </div>
 
   <div class="dashboard-main">
-    <div class="feed-panel" id="entryContainer">
-      </div>
+    <div class="feed-panel" id="entryContainer"></div>
     <div class="detail-panel">
       <div id="placeholder" style="text-align:center; margin-top:100px; color:var(--text-muted);">
         <h3>Select an entry to view details</h3>
@@ -119,73 +131,74 @@
     </div>
   </div>
 
-  <div id="overlay" class="ml-info-overlay" hidden></div>
-  <div id="modal" class="ml-info-modal" hidden>
+  <div id="infoOverlay" class="ml-info-overlay" hidden></div>
+  <div id="infoModal" class="ml-info-modal" hidden>
     <div class="ml-info-modal-inner">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <span style="font-weight:900; font-size:11px; color:#94a3b8; text-transform:uppercase;">System Information</span>
-        <div id="closeBtn" style="cursor:pointer; font-weight:900; padding:5px; font-size:20px;">✕</div>
+      
+      <div class="ml-info-header">
+        <h2>System Information</h2>
+        <button id="infoCloseBtn" class="ml-info-close" type="button" aria-label="Close info">✕</button>
       </div>
       
-      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:15px;">
-        <button class="tab-btn ml-info-tab-active" data-tab="sol">The Solution</button>
-        <button class="tab-btn" data-tab="guide">Field Guide</button>
-        <button class="tab-btn" data-tab="tips">Tips</button>
-      </div>
-
-      <div class="panel" id="panel-sol">
-        <h3>Direct Manager Control</h3>
-        <p>This dashboard pulls data directly from your specific client spreadsheet, allowing you to review field reports in real-time.</p>
+      <div class="ml-info-tabs">
+        <button class="ml-info-tab ml-info-tab-active" data-tab="about" type="button">The Solution</button>
+        <button class="ml-info-tab" data-tab="how" type="button">Field Guide</button>
+        <button class="ml-info-tab" data-tab="faq" type="button">FAQ</button>
+        <button class="ml-info-tab" data-tab="credits" type="button">Credits</button>
       </div>
       
-      <div class="panel" id="panel-guide" hidden>
-        <h3>Field Data Guide</h3>
-        <p><strong>Assignment:</strong> The site or project name.<br><strong>Location:</strong> GPS link captured at the moment of submission.</p>
-      </div>
-
-      <div class="panel" id="panel-tips" hidden>
-        <h3>Dashboard Tips</h3>
-        <p>Use the ☀️ icon in the header to switch to Light Mode for high-glare environments.</p>
-      </div>
-
-      <section class="ml-info-panel" id="panel-credits" data-panel="credits">
-        <footer class="footer">
-          <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
-          <div class="footer-credits">
-              Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com" target="_blank">stupidsimplecrazyfast.com</a>
+      <div class="ml-info-body">
+        
+        <section class="ml-info-panel" data-panel="about">
+          <h3>Direct Manager Control</h3>
+          <p>This dashboard pulls data directly from your specific client spreadsheet, allowing you to review field reports in real-time.</p>
+          <ul>
+            <li>Instantly updates on refresh.</li>
+            <li>Direct map linking to GPS coordinates.</li>
+            <li>Clean, distraction-free interface.</li>
+          </ul>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="how" hidden>
+          <h3>Field Data Guide</h3>
+          <ul>
+            <li><strong>Assignment:</strong> The site or project name.</li>
+            <li><strong>Location:</strong> GPS link captured at the moment of submission.</li>
+            <li><strong>Agent:</strong> The internal ID or name of the worker who submitted the report.</li>
+          </ul>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="faq" hidden>
+          <h3>Dashboard Tips</h3>
+          <p><strong>Is this a live feed?</strong><br>Yes, the moment a field worker gets a cellular signal and their report clears the background sync, it will appear here upon refresh.</p>
+          <p><strong>Hard to read in a bright truck?</strong><br>Use the ☀️ icon in the top right header to switch to Light Mode for high-glare environments.</p>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="credits" hidden>
+          <div style="text-align: center; margin-top: 10px;">
+            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+            <div class="footer-credits">
+                Built by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a> • <a href="https://machinolabs.com" target="_blank">machinolabs.com</a> • <a href="https://stupidsimplecrazyfast.com" target="_blank">stupidsimplecrazyfast.com</a>
+            </div>
           </div>
-        </footer>
-      </section>
+        </section>
+        
+      </div>
     </div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby8gkaqUExEJ6QwZy_m-8RauS2tjTwiOrgC9-MQOjKwC8ZEVi1TW0vPuBAfHYSxLgko/exec';
+    // ==========================================
+    // CORE DASHBOARD LOGIC
+    // ==========================================
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEGm-S_s3kGpqOvqZKvdp_xGp7D64nPi_2JfHjbP3-PUWIgnOMUM4LDcSjLb3X396O/exec';
     let currentReports = [];
 
-    // THEME & MODAL LOGIC
     document.getElementById('themeToggle').onclick = () => {
       document.body.classList.toggle('light-mode');
       document.getElementById('themeToggle').innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
     };
 
-    const toggleModal = () => {
-      document.getElementById('modal').hidden = !document.getElementById('modal').hidden;
-      document.getElementById('overlay').hidden = !document.getElementById('overlay').hidden;
-    };
-    [document.getElementById('infoBtn'), document.getElementById('closeBtn'), document.getElementById('overlay')].forEach(el => el.onclick = toggleModal);
-
-    // MODAL TAB SWITCHING LOGIC (ADDED)
-    document.querySelectorAll('.tab-btn').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('ml-info-tab-active'));
-        document.querySelectorAll('.panel').forEach(p => p.hidden = true);
-        tab.classList.add('ml-info-tab-active');
-        document.getElementById(`panel-${tab.dataset.tab}`).hidden = false;
-      });
-    });
-
-    // AUTH & DATA FETCH
     async function authManager() {
       const id = document.getElementById('coID').value.toUpperCase();
       const key = document.getElementById('aKey').value.toUpperCase();
@@ -208,14 +221,16 @@
     function renderFeed() {
       const container = document.getElementById('entryContainer');
       container.innerHTML = '';
-      currentReports.shift(); // Remove header row
+      currentReports.shift(); 
+      currentReports.reverse(); // Show newest reports at the top
+      
       currentReports.forEach((row, i) => {
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.onclick = () => showDetail(row, card);
         card.innerHTML = `
-          <div class="assignment-title">${row[5]}</div>
-          <div class="worker-id">Agent: ${row[3]}</div>
+          <div class="assignment-title">${row[5] || 'Unassigned'}</div>
+          <div class="worker-id">Agent: ${row[3] || 'Unknown'}</div>
         `;
         container.appendChild(card);
       });
@@ -230,7 +245,7 @@
       
       content.innerHTML = `
         <div class="detail-header">
-          <h1 style="font-size:32px; font-weight:900;">${row[5]}</h1>
+          <h1 style="font-size:32px; font-weight:900;">${row[5] || 'Unassigned'}</h1>
           <p style="color:var(--text-muted); font-weight:600;">Report submitted by ${row[3]} on ${new Date(row[0]).toLocaleString()}</p>
         </div>
         <div class="detail-grid">
@@ -238,10 +253,61 @@
           <div class="detail-item"><div class="detail-label">Reference #</div><div class="detail-value">${row[7] || '--'}</div></div>
           <div class="detail-item" style="grid-column: span 2;"><div class="detail-label">Notes</div><div class="detail-value" style="white-space:pre-wrap;">${row[8] || 'No notes provided.'}</div></div>
           <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value"><a href="${row[4]}" target="_blank" style="color:var(--accent); text-decoration:none;">View Maps ↗</a></div></div>
-          <div class="detail-item"><div class="detail-label">Task Status</div><div class="detail-value" style="color:${row[9] === 'YES' ? 'var(--success)' : 'var(--warning)'}">${row[9]}</div></div>
+          <div class="detail-item"><div class="detail-label">Task Status</div><div class="detail-value" style="color:${row[9] === 'YES' ? 'var(--success)' : 'var(--warning)'}">${row[9] || 'N/A'}</div></div>
         </div>
       `;
     }
+
+    // ==========================================
+    // STANDARD MACHINO-LABS INFO MODAL LOGIC
+    // ==========================================
+    (function initInfoModal() {
+      const infoBtn = document.getElementById("infoBtn");
+      const infoOverlay = document.getElementById("infoOverlay");
+      const infoModal = document.getElementById("infoModal");
+      const infoCloseBtn = document.getElementById("infoCloseBtn");
+      const tabButtons = Array.from(document.querySelectorAll(".ml-info-tab"));
+      const panels = Array.from(document.querySelectorAll(".ml-info-panel"));
+
+      function openInfo() { 
+        infoOverlay.hidden = false; 
+        infoModal.hidden = false; 
+      }
+      
+      function closeInfo() { 
+        infoOverlay.hidden = true; 
+        infoModal.hidden = true; 
+      }
+
+      function setActiveTab(tabName) {
+        tabButtons.forEach(btn => {
+          btn.classList.toggle("ml-info-tab-active", btn.dataset.tab === tabName);
+        });
+        panels.forEach(panel => {
+          panel.hidden = (panel.dataset.panel !== tabName);
+        });
+      }
+
+      // Toggle modal on the header 'i' icon
+      infoBtn.addEventListener("click", () => {
+        infoModal.hidden ? openInfo() : closeInfo();
+      });
+      
+      infoOverlay.addEventListener("click", closeInfo);
+      infoCloseBtn.addEventListener("click", closeInfo);
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !infoModal.hidden) {
+          closeInfo();
+        }
+      });
+
+      setActiveTab("about");
+    })();
   </script>
 </body>
 </html>
