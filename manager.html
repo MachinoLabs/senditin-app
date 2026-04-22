@@ -564,5 +564,75 @@
   </script>
     
   </script>
+<script>
+  // Insert your exact Google Apps Script URL here!
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbzk7eNwh2i7HGqmKZKpI2mTEO67pp3vxG5ppxSnc4JN9tmuWkfzCGA601IdKdV3-pZN/exec';
+  
+  async function loadVaultHistory() {
+    const feed = document.getElementById('history-feed');
+    feed.innerHTML = '<p style="color: #cbd5e1;">Syncing securely with the vault...</p>';
+    
+    // Notice the specific command tags attached to the URL
+    const fetchURL = scriptURL + '?action=getHistory&secretKey=MACHINO_V12_SECURE';
+
+    try {
+      const response = await fetch(fetchURL);
+      const data = await response.json();
+
+      if (data.error) {
+        feed.innerHTML = `<p style="color: #ef4444;">Access Denied: ${data.error}</p>`;
+        return;
+      }
+
+      if (data.length === 0) {
+        feed.innerHTML = '<p style="color: #9ca3af;">No archived reports yet. Your Ledger is empty.</p>';
+        return;
+      }
+
+      // Build the display table
+      let tableHTML = `
+        <table style="width: 100%; text-align: left; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+          <tr style="border-bottom: 2px solid #334155; color: #9ca3af; text-transform: uppercase; font-size: 11px;">
+            <th style="padding: 12px 8px;">Date</th>
+            <th style="padding: 12px 8px;">Worker</th>
+            <th style="padding: 12px 8px;">Assignment</th>
+            <th style="padding: 12px 8px;">Status</th>
+          </tr>
+      `;
+
+      // Loop through the 50 rows and print them out safely
+      data.forEach(row => {
+        // Adjust these row['COLUMN_NAME'] values to match your exact Google Sheet headers
+        const dateRaw = row['Timestamp'] || '';
+        const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleDateString() : 'N/A';
+        const worker = row['REPORT BY'] || row['Worker Name'] || 'N/A';
+        const task = row['ASSIGNMENT'] || 'N/A';
+        const status = row['COMPLETE'] || 'NO';
+        
+        // Color-code the status
+        const statusColor = status.toUpperCase() === 'YES' ? '#10b981' : '#f59e0b';
+
+        tableHTML += `
+          <tr style="border-bottom: 1px solid #1e293b; color: #f9fafb; transition: background 0.2s;">
+            <td style="padding: 14px 8px; color: #cbd5e1;">${dateFormatted}</td>
+            <td style="padding: 14px 8px; font-weight: bold;">${worker}</td>
+            <td style="padding: 14px 8px;">${task}</td>
+            <td style="padding: 14px 8px; font-weight: 900; color: ${statusColor};">${status}</td>
+          </tr>
+        `;
+      });
+
+      tableHTML += '</table>';
+      feed.innerHTML = tableHTML;
+
+    } catch (error) {
+      feed.innerHTML = '<p style="color: #ef4444;">Failed to sync with vault. Please check your connection.</p>';
+    }
+  }
+
+  // Trigger the sync when the page loads, or when the user clicks the "History" tab
+  document.addEventListener('DOMContentLoaded', loadVaultHistory);
+</script>
+  
 </body>
 </html>
