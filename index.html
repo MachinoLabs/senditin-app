@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEND IT IN | Field Reporting for the Trades</title>
+  
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --bg-card: #111827;
+      --border-color: #1f2937;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent: #00f0ff; 
+      --accent-hover: #00c3cf;
+    }
+
+    /* LIGHT MODE OVERRIDES */
+    body.light-mode {
+      --bg-dark: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #0284c7; 
+      --accent-hover: #0369a1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
+
+    /* --- TYPOGRAPHY --- */
+    h1, h2, h3 { font-weight: 900; letter-spacing: -1px; line-height: 1.2; }
+    h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px; color: var(--text-main); }
+    p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; max-width: 600px; }
+    
+    .accent-text { color: var(--accent); }
+
+    /* --- LAYOUT & CONTAINERS --- */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 100px 0; border-bottom: 1px solid var(--border-color); }
+    
+    /* --- NAVIGATION & LOGO (PULLED FROM APP) --- */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
+    
+    .logo-badge { 
+      background-color: var(--bg-card); 
+      padding: 10px 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+      text-decoration: none; 
+      display: flex; 
+      align-items: center; 
+      transition: border-color 0.2s, transform 0.2s; 
+    }
+    .logo-badge:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .logo-text { font-size: 32px; font-weight: 900; letter-spacing: -1px; color: var(--text-main); margin: 0; line-height: 1; }
+    .logo-blue { color: #0d6efd; } /* The exact blue from the app */
+
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    
+    /* UI Controls (Theme & Info) */
+    .ui-controls { display: flex; gap: 10px; align-items: center; border-left: 1px solid var(--border-color); padding-left: 20px; }
+    .nav-icon-btn {
+      width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border-color);
+      background: var(--bg-card); color: var(--text-main); font-size: 18px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
+    }
+    .nav-icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* --- BUTTONS --- */
+    .btn {
+      display: inline-block; background: var(--accent); color: #ffffff; padding: 16px 32px;
+      border-radius: 50px; font-weight: 800; font-size: 14px; text-transform: uppercase;
+      letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer;
+    }
+    body:not(.light-mode) .btn { color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
+    body:not(.light-mode) .btn:hover { box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); transform: translateY(-2px); }
+    body.light-mode .btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+    /* --- HERO SECTION --- */
+    .hero { text-align: center; padding: 120px 0 80px; }
+    .hero p { margin: 0 auto 40px; font-size: 1.25rem; max-width: 700px; }
+    .hero-trust { margin-top: 30px; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); }
+
+    /* --- PROBLEM SECTION --- */
+    .problem-section { background-color: var(--bg-card); text-align: center; }
+    .problem-section p { margin: 0 auto; max-width: 800px; font-size: 1.3rem; }
+    .pain-points { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; align-items: center; }
+    .pain-point { background: rgba(255,50,50,0.05); border: 1px solid rgba(255,50,50,0.2); padding: 15px 30px; border-radius: 8px; color: #ef4444; font-weight: 600; width: 100%; max-width: 600px; text-align: left;}
+
+    /* --- SOLUTION GRID --- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 60px; }
+    .card { background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid var(--border-color); transition: transform 0.3s ease, border-color 0.3s ease; }
+    .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+    .card-number { color: var(--accent); font-size: 48px; font-weight: 900; opacity: 0.5; margin-bottom: 20px; line-height: 1; }
+    .card h3 { font-size: 24px; margin-bottom: 15px; }
+
+    /* --- BETA SECTION --- */
+    .beta-section { text-align: center; border-bottom: none;}
+    .beta-box { border: 1px solid var(--accent); padding: 60px 40px; border-radius: 24px; max-width: 800px; margin: 0 auto; background: rgba(0, 240, 255, 0.02); }
+    .beta-box ul { text-align: left; max-width: 400px; margin: 30px auto; color: var(--text-main); font-weight: 500; font-size: 1.1rem; line-height: 2;}
+    .beta-box li { margin-bottom: 10px; }
+
+    /* --- FOOTER --- */
+    footer { text-align: center; padding: 40px 20px; font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--text-muted); border-top: 1px solid var(--border-color); }
+    footer a { color: var(--accent); text-decoration: none; margin: 0 5px; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      h1 { font-size: 2.5rem; }
+      .beta-box { padding: 40px 20px; }
+      .ui-controls { border-left: none; padding-left: 0; }
+    }
+
+    /* ==========================================
+       INFO MODAL COMPONENT CSS
+       ========================================== */
+    .ml-info-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 998; }
+    .ml-info-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+    .ml-info-modal[hidden], .ml-info-overlay[hidden] { display: none !important; }
+    .ml-info-modal-inner { background: #f8fafc; color: #0f172a; border-radius: 12px; padding: 24px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; border: 1px solid #cbd5e1; }
+    
+    .ml-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .ml-info-header h2 { margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;}
+    .ml-info-close { border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+    .ml-info-close:hover { background: rgba(0,0,0,0.1); }
+    
+    .ml-info-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; }
+    .ml-info-tab { border-radius: 999px; border: 1px solid rgba(15, 23, 42, 0.18); background: rgba(15, 23, 42, 0.02); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #0f172a; }
+    .ml-info-tab-active { background: #0f172a; color: #f9fafb; border-color: #0f172a; }
+    
+    .ml-info-body { max-height: 55vh; overflow-y: auto; font-size: 14px; line-height: 1.6; padding-right: 4px; color: #334155;}
+    .ml-info-body h3 { margin: 4px 0 8px; font-size: 15px; color: #0f172a; font-weight: 700;}
+    .ml-info-body p, .ml-info-body ul { margin-top: 0; margin-bottom: 14px; }
+    .ml-info-body a { color: #0284c7; text-decoration: none; font-weight: 600; }
+    .ml-info-panel[hidden] { display: none; }
+    
+    .ml-other-games { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .ml-other-tile { display: block; padding: 12px 14px; border-radius: 9px; border: 1px solid rgba(15, 23, 42, 0.15); background: #ffffff; text-decoration: none; color: #0f172a; transition: background 0.2s, transform 0.1s; }
+    .ml-other-tile:hover { background: #f1f5f9; transform: translateY(-2px); border-color: #0284c7; }
+    .ml-other-title { font-weight: 800; font-size: 14px; margin-bottom: 2px; }
+    .ml-other-sub { font-size: 12px; opacity: 0.8; font-weight: 500; }
+
+    .footer-tag { margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #475569;}
+    .footer-credits { font-size: 13px; line-height: 1.6; color: #64748b;}
+  </style>
+</head>
+<body>
+
+  <nav>
+    
+    <a href="#" class="logo-badge">
+      <div class="logo-text">SEND<span class="logo-blue">IT</span>IN</div>
+    </a>
+    
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="http://senditin.app/manager" style="color: var(--accent);" target="_blank">Manager Login ↗</a>
+      </div>
+      
+      <div class="ui-controls">
+        <button id="infoBtn" class="nav-icon-btn" aria-label="System Info">ⓘ</button>
+        <button id="themeToggle" class="nav-icon-btn" aria-label="Toggle Theme">☀️</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero container">
+    <h1>Stop letting field workers break your Google Sheets.</h1>
+    <p>Get pristine, GPS-verified field reports pushed directly to your company ledger—without your crew ever touching your fragile spreadsheets.</p>
+    <a href="#beta" class="btn">Join The Local Beta Pilot</a>
+    <div class="hero-trust">Built for the trades. Stupid simple for the field.</div>
+  </section>
+
+  <section id="problem" class="problem-section">
+    <div class="container">
+      <h2>Your database should be a vault, not a sandbox.</h2>
+      <p style="color: var(--text-muted);">You run your business on Google Sheets. But your guys belong in the field, not in formatting menus. We built SEND IT IN because we saw the same nightmare happening to every service business:</p>
+      
+      <div class="pain-points">
+        <div class="pain-point">⚠️ A tech accidentally deletes a formula, ruining your financials.</div>
+        <div class="pain-point">⚠️ Crew leaders text photos of messy legal pads you have to transcribe.</div>
+        <div class="pain-point">⚠️ You waste hours every Friday fixing typos just to get billing right.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="container">
+    <div style="text-align: center;">
+      <h2>The 3-Step "Stupid Simple" Workflow</h2>
+      <p style="margin: 0 auto;">No training required. We built a closed-loop system that protects your data.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-number">01</div>
+        <h3>The Field App</h3>
+        <p>Your guys get a fast, offline-capable mobile web app. They punch in their PIN, fill out a dead-simple form, and hit submit. <strong>They never see your spreadsheet.</strong></p>
+      </div>
+      
+      <div class="card">
+        <div class="card-number">02</div>
+        <h3>Command Center</h3>
+        <p>Reports land in your private Manager Dashboard. You review the data, check the GPS pin drop, fix any typos, add your internal notes, and hit "Approve."</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-number">03</div>
+        <h3>The Vault</h3>
+        <p>The Master Brain routes the approved, perfectly formatted data directly into your permanent Google Sheet. Clean data. No broken formulas. Total peace of mind.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="beta" class="beta-section">
+    <div class="container">
+      <div class="beta-box">
+        <h2>We are launching our closed Beta Pilot.</h2>
+        <p style="margin: 0 auto; color: var(--text-muted);">We are looking for 5 local service businesses to help us road-test the ultimate field reporting system.</p>
+        
+        <ul style="list-style-type: '✓  ';">
+          <li>A custom-built Google Sheets Ledger.</li>
+          <li>Unlimited manager and worker access.</li>
+          <li>Direct access to the founders for feature requests.</li>
+          <li class="accent-text">Locked-in legacy pricing for life when we go public.</li>
+        </ul>
+
+        <a href="mailto:joe@machinolabs.com?subject=SEND IT IN - Beta Pilot Inquiry&body=Hi Joe,%0D%0A%0D%0AI'm interested in joining the SEND IT IN beta pilot. Let's talk.%0D%0A%0D%0ACompany Name:%0D%0APhone Number:" class="btn" style="margin-top: 15px;">Claim Your Beta Spot Today</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    SEND IT IN © 2026 | BUILT BY <a href="https://machinolabs.com" target="_blank">MACHINOLABS</a> | <a href="https://senditin.app" target="_blank">SENDITIN.APP</a>
+  </footer>
+
+  <div id="infoOverlay" class="ml-info-overlay" hidden></div>
+  <div id="infoModal" class="ml-info-modal" hidden>
+    <div class="ml-info-modal-inner">
+      
+      <div class="ml-info-header">
+        <h2>System Architecture</h2>
+        <button id="infoCloseBtn" class="ml-info-close" type="button" aria-label="Close info">✕</button>
+      </div>
+      
+      <div class="ml-info-tabs">
+        <button class="ml-info-tab ml-info-tab-active" data-tab="about" type="button">About</button>
+        <button class="ml-info-tab" data-tab="faq" type="button">Security</button>
+        <button class="ml-info-tab" data-tab="portfolio" type="button">MachinoLabs Portfolio</button>
+        <button class="ml-info-tab" data-tab="credits" type="button">Credits</button>
+      </div>
+      
+      <div class="ml-info-body">
+        
+        <section class="ml-info-panel" data-panel="about">
+          <h3>The "Stupid Simple" Philosophy</h3>
+          <p>SEND IT IN was engineered to solve one specific problem: field workers breaking Google Sheets. We decouple data entry from data storage.</p>
+          <ul>
+            <li>Progressive Web App (PWA) architecture.</li>
+            <li>No App Store downloads required.</li>
+            <li>Instant sync via Google Apps Script.</li>
+          </ul>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="faq" hidden>
+          <h3>Data Security</h3>
+          <p><strong>Where does my data go?</strong><br>Directly into a private Google Sheet owned by your business. We do not host your proprietary data on third-party servers.</p>
+          <p><strong>Are the worker PINs secure?</strong><br>Yes. PINs are verified against a master routing log to ensure data drops into the correct client ledger.</p>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="portfolio" hidden>
+          <h3>More from MachinoLabs</h3>
+          <p style="margin-bottom: 12px;">We architect high-conversion digital experiences for local businesses.</p>
+          <div class="ml-other-games">
+            <a href="https://machinolabs.com" target="_blank" class="ml-other-tile">
+              <div class="ml-other-title">Digital Gold-Foil Scratch-Offs</div>
+              <div class="ml-other-sub">Interactive gamified menus & tap-to-call tech.</div>
+            </a>
+            <a href="https://machinolabs.com" target="_blank" class="ml-other-tile">
+              <div class="ml-other-title">Local Biz Coupon Engines</div>
+              <div class="ml-other-sub">Drive mid-week foot traffic via mobile-first funnels.</div>
+            </a>
+            <a href="https://machinolabs.com" target="_blank" class="ml-other-tile">
+              <div class="ml-other-title">B2B Micro-Apps</div>
+              <div class="ml-other-sub">Custom workflow solutions for the trades.</div>
+            </a>
+          </div>
+        </section>
+        
+        <section class="ml-info-panel" data-panel="credits" hidden>
+          <footer style="border-top: none; padding: 10px 0; text-align: left;">
+            <p class="footer-tag">Built with the StupidSimpleCrazyFast™ micro-app framework.</p>
+            <div class="footer-credits">
+                Engineered by <a href="https://machinolabs.com" target="_blank">MachinoLabs</a>
+                <br>
+                Joe • 717.623.2907
+            </div>
+          </footer>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      themeBtn.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+    });
+
+    // Info Modal Logic
+    (function initInfoModal() {
+      const infoBtn = document.getElementById("infoBtn");
+      const infoOverlay = document.getElementById("infoOverlay");
+      const infoModal = document.getElementById("infoModal");
+      const infoCloseBtn = document.getElementById("infoCloseBtn");
+      const tabButtons = Array.from(document.querySelectorAll(".ml-info-tab"));
+      const panels = Array.from(document.querySelectorAll(".ml-info-panel"));
+
+      function openInfo() { infoOverlay.hidden = false; infoModal.hidden = false; }
+      function closeInfo() { infoOverlay.hidden = true; infoModal.hidden = true; }
+
+      function setActiveTab(tabName) {
+        tabButtons.forEach(btn => btn.classList.toggle("ml-info-tab-active", btn.dataset.tab === tabName));
+        panels.forEach(panel => panel.hidden = (panel.dataset.panel !== tabName));
+      }
+
+      infoBtn.addEventListener("click", () => infoModal.hidden ? openInfo() : closeInfo());
+      infoOverlay.addEventListener("click", closeInfo);
+      infoCloseBtn.addEventListener("click", closeInfo);
+      tabButtons.forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+      
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !infoModal.hidden) closeInfo();
+      });
+
+      setActiveTab("about");
+    })();
+  </script>
+</body>
+</html>
