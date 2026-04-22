@@ -602,11 +602,18 @@
       // Loop through the 50 rows and print them out safely
       data.forEach(row => {
         // Adjust these row['COLUMN_NAME'] values to match your exact Google Sheet headers
-        const dateRaw = row['Timestamp'] || '';
-        const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleDateString() : 'N/A';
-        const worker = row['REPORT BY'] || row['Worker Name'] || 'N/A';
-        const task = row['ASSIGNMENT'] || 'N/A';
-        const status = row['COMPLETE'] || 'NO';
+        // --- ALL CAPS DATABASE MAPPING (CUSTOMIZED TO SCREENSHOT) ---
+const dateRaw = row['TIMESTAMP'] || '';
+const company = row['COMPANY ID'] || '';
+const pin = row['PIN CODE'] || '';
+const agentId = row['REPORT BY'] || '';
+const worker = row['REPORT BY'] || ''; // Used for team directory
+const gpsLink = row['LOCATION'] || '';
+const assignment = row['ASSIGNMENT'] || '';
+const quantity = row['QUANTITY'] || '';
+const reference = row['REFERENCE'] || ''; 
+const workerNotes = row['NOTES'] || ''; 
+// ------------------------------------------------------------;
         
         // Color-code the status
         const statusColor = status.toUpperCase() === 'YES' ? '#10b981' : '#f59e0b';
