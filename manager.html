@@ -602,21 +602,22 @@
       // Loop through the 50 rows and print them out safely
       data.forEach(row => {
         // Adjust these row['COLUMN_NAME'] values to match your exact Google Sheet headers
-        // --- ALL CAPS DATABASE MAPPING (CUSTOMIZED TO SCREENSHOT) ---
-const dateRaw = row['TIMESTAMP'] || '';
-const company = row['COMPANY ID'] || '';
-const pin = row['PIN CODE'] || '';
-const agentId = row['REPORT BY'] || '';
-const worker = row['REPORT BY'] || ''; // Used for team directory
-const gpsLink = row['LOCATION'] || '';
-const assignment = row['ASSIGNMENT'] || '';
-const quantity = row['QUANTITY'] || '';
-const reference = row['REFERENCE'] || ''; 
-const workerNotes = row['NOTES'] || ''; 
-      const status = row['COMPLETE?'] || 'Pending';
-const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleString() : 'N/A';
+      // --- ARRAY INDEX DATABASE MAPPING (THE FINAL FIX) ---
+const dateRaw = row[0] || '';       // Col A: TIMESTAMP
+const company = row[1] || '';       // Col B: COMPANY ID
+const pin = row[2] || '';           // Col C: PIN CODE
+const agentId = row[3] || '';       // Col D: REPORT BY
+const worker = row[3] || '';        // Col D: REPORT BY (Used for team directory)
+const gpsLink = row[4] || '';       // Col E: LOCATION
+const assignment = row[5] || '';    // Col F: ASSIGNMENT
+const quantity = row[6] || '';      // Col G: QUANTITY
+const reference = row[7] || '';     // Col H: REFERENCE
+const workerNotes = row[8] || '';   // Col I: NOTES
+const status = row[9] || 'Pending'; // Col J: COMPLETE?
+// ----------------------------------------------------
+
+        const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleString() : 'N/A';
 const task = assignment;
-// ------------------------------------------------------------;
         
         // Color-code the status
         const statusColor = status.toUpperCase() === 'YES' ? '#10b981' : '#f59e0b';
