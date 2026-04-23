@@ -614,7 +614,7 @@ const quantity = row['QUANTITY'] || '';
 const reference = row['REFERENCE'] || ''; 
 const workerNotes = row['NOTES'] || ''; 
       const status = row['COMPLETE?'] || 'Pending';
-const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleDateString() : 'N/A';
+const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleString() : 'N/A';
 const task = assignment;
 // ------------------------------------------------------------;
         
