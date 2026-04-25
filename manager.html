@@ -644,6 +644,42 @@ const task = assignment;
 
   // Trigger the sync when the page loads, or when the user clicks the "History" tab
   document.addEventListener('DOMContentLoaded', loadVaultHistory);
+
+  // ==========================================
+// LOGOUT & MEMORY WIPE
+// ==========================================
+function logoutManager() {
+    // Erase the permanent memory
+    localStorage.removeItem('sendItIn_ID');
+    localStorage.removeItem('sendItIn_Key');
+    
+    // Refresh the page to bring the login screen back
+    window.location.reload(); 
+}
+
+  // ==========================================
+// ENTERPRISE SESSION & AUTO-REFRESH MANAGER
+// ==========================================
+window.onload = () => {
+    // 1. Check if manager is already logged in from a previous session
+    const savedID = localStorage.getItem('sendItIn_ID');
+    const savedKey = localStorage.getItem('sendItIn_Key');
+    
+    if (savedID && savedKey) {
+        // Quietly fill in the boxes and log them in instantly
+        document.getElementById('coID').value = savedID;
+        document.getElementById('aKey').value = savedKey;
+        authManager(); 
+    }
+
+    // 2. The Silent Auto-Refresh (Runs every 30 seconds)
+    setInterval(() => {
+        // Only run the silent fetch if the login screen is currently hidden
+        if (document.getElementById('login-overlay').style.display === 'none') {
+            authManager(); // Fetches new data and updates tables seamlessly in the background
+        }
+    }, 30000); 
+};
 </script>
   
 </body>
