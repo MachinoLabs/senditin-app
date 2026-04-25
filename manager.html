@@ -300,6 +300,10 @@
         
         if (data.success) {
           document.getElementById('login-overlay').style.display = 'none';
+
+          // Write the credentials to permanent memory
+        localStorage.setItem('sendItIn_ID', id);
+        localStorage.setItem('sendItIn_Key', key);
           
           // Activate the Trust Anchor (Google Sheets Link)
           const vaultBtn = document.getElementById('vaultLink');
