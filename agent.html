@@ -255,6 +255,7 @@
       btn.classList.add('btn-orange');
 
       const formData = new FormData(form);
+      formData.set('companyID', formData.get('companyID').toUpperCase());
       const params = new URLSearchParams(formData).toString();
       const finalURL = scriptURL + "?" + params;
 
