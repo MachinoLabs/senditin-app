@@ -308,6 +308,45 @@
         });
       });
     }
+
+// === IPHONE TANK FLUSH OVERRIDE ===
+// iPhones block background sync, so we force a flush when the app opens or internet returns
+window.addEventListener('online', flushTheTank);
+window.addEventListener('load', () => {
+    setTimeout(flushTheTank, 2000); // Give the database 2 seconds to wake up
+});
+
+async function flushTheTank() {
+    if (!navigator.onLine) return; // If still offline, do nothing
+    
+    // Grab the existing database connection you already opened at the top of your file
+    const db = dbRequest.result;
+    if (!db) return;
+
+    const tx = db.transaction("outbox", "readonly");
+    const store = tx.objectStore("outbox");
+    const request = store.getAll();
+
+    request.onsuccess = async () => {
+        const stuckReports = request.result;
+        if (stuckReports.length === 0) return; // Tank is empty, all good!
+
+        // If tank has reports, fire them off
+        for (let url of stuckReports) {
+            try {
+                await fetch(url, { method: 'GET', mode: 'no-cors' });
+            } catch (e) {
+                console.log("Connection dropped during flush. Keeping in tank.");
+                return; // Stop and keep in tank if network drops again
+            }
+        }
+        
+        // If we made it through the loop, everything sent! Empty the tank.
+        db.transaction("outbox", "readwrite").objectStore("outbox").clear();
+        alert(`SUCCESS: ${stuckReports.length} offline report(s) were just synced to the Vault!`);
+    };
+}
+    
   </script>
 </body>
 </html>
