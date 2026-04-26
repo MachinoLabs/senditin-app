@@ -685,6 +685,17 @@ window.onload = () => {
         }
     }, 30000); 
 };
+
+// EJECT SEAT: Logout Function
+function logout() {
+  // 1. Wipe the keys from the browser's permanent memory
+  localStorage.removeItem('sendItIn_ID');
+  localStorage.removeItem('sendItIn_Key');
+  
+  // 2. Force a hard reload of the page to reset the app completely
+  location.reload();
+}
+  
 </script>
   
 </body>
