@@ -315,19 +315,19 @@
 // === IPHONE TANK FLUSH OVERRIDE ===
 // iPhones block background sync, so we force a flush when the app opens or internet returns
 async function flushTheTank() {
-    alert("CHECK 1: Button clicked! Checking connection...");
-    
+    // Grab the orange button so we can change its text dynamically
+    const btn = document.querySelector('button[onclick="flushTheTank()"]');
+    const originalText = "SYNC OFFLINE REPORTS";
+
     if (!navigator.onLine) {
-        alert("FAIL: Phone thinks you are offline.");
+        btn.innerHTML = "OFFLINE - NO SIGNAL";
+        setTimeout(() => btn.innerHTML = originalText, 3000);
         return; 
     }
     
-    alert("CHECK 2: Connection good. Waking up the Database...");
+    btn.innerHTML = "CHECKING DATABASE...";
     const db = dbRequest.result;
-    if (!db) {
-        alert("FAIL: Database is asleep or lost context.");
-        return;
-    }
+    if (!db) return;
 
     const tx = db.transaction("outbox", "readonly");
     const store = tx.objectStore("outbox");
@@ -335,26 +335,31 @@ async function flushTheTank() {
 
     request.onsuccess = async () => {
         const stuckReports = request.result;
-        alert(`CHECK 3: Database open! Found ${stuckReports.length} stuck reports.`);
         
-        if (stuckReports.length === 0) return; 
+        if (stuckReports.length === 0) {
+            btn.innerHTML = "TANK EMPTY - ALL SYNCED!";
+            setTimeout(() => btn.innerHTML = originalText, 3000);
+            return; 
+        }
 
-        alert("CHECK 4: Firing reports at the Vault now...");
+        btn.innerHTML = `FIRING ${stuckReports.length} REPORTS...`;
+        
         for (let url of stuckReports) {
             try {
                 await fetch(url, { method: 'GET', mode: 'no-cors' });
             } catch (e) {
-                alert(`FAIL: Apple blocked the transmission! Error: ${e.message}`);
+                btn.innerHTML = "CONNECTION DROPPED!";
+                setTimeout(() => btn.innerHTML = originalText, 3000);
                 return; 
             }
         }
         
+        // Empty the tank and show success
         db.transaction("outbox", "readwrite").objectStore("outbox").clear();
-        alert(`ULTIMATE SUCCESS: ${stuckReports.length} offline report(s) just punched through!`);
-    };
-
-    request.onerror = (e) => {
-        alert("FAIL: Could not read the outbox.");
+        btn.innerHTML = "SUCCESS!";
+        
+        // Reset the button back to normal after 3 seconds
+        setTimeout(() => btn.innerHTML = originalText, 3000);
     };
 }
   </script>
